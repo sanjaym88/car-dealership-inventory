@@ -1,0 +1,9 @@
+// Smoke test proving the Vitest + Testing Library harness works.
+import { render, screen } from '@testing-library/react'
+import App from './App'
+
+test('renders the app title', () => {
+  render(<App />)
+
+  expect(screen.getByRole('heading', { name: /car dealership inventory/i })).toBeInTheDocument()
+})
