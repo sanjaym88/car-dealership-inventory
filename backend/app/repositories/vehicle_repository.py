@@ -44,17 +44,18 @@ class VehicleRepository:
         self.db.delete(vehicle)
         self.db.commit()
 
-    def decrement_stock(self, vehicle_id: int) -> Vehicle | None:
+    def take_one_unit(self, vehicle_id: int) -> Vehicle | None:
         """Take one unit out of stock in a single UPDATE, so concurrent purchases can't oversell.
 
-        Returns the updated vehicle, or None if it doesn't exist or is already out of stock.
+        Does not commit: the caller commits once the matching order is recorded, so both are
+        saved together. Returns the updated vehicle, or None if it doesn't exist or is sold out.
         """
         statement = (
             update(Vehicle)
             .where(Vehicle.id == vehicle_id, Vehicle.quantity > 0)
             .values(quantity=Vehicle.quantity - 1)
         )
-        return self._apply_stock_change(vehicle_id, statement)
+        return self._apply_stock_change(vehicle_id, statement, commit=False)
 
     def increment_stock(self, vehicle_id: int, amount: int) -> Vehicle | None:
         """Add units in a single UPDATE. Returns the updated vehicle, or None if it doesn't exist."""
@@ -65,9 +66,10 @@ class VehicleRepository:
         )
         return self._apply_stock_change(vehicle_id, statement)
 
-    def _apply_stock_change(self, vehicle_id: int, statement) -> Vehicle | None:
+    def _apply_stock_change(self, vehicle_id: int, statement, commit: bool = True) -> Vehicle | None:
         changed = self.db.execute(statement.execution_options(synchronize_session=False)).rowcount
-        self.db.commit()
+        if commit:
+            self.db.commit()
         if changed == 0:
             return None
         return self.db.get(Vehicle, vehicle_id, populate_existing=True)

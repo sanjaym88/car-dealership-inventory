@@ -2,11 +2,12 @@
 from fastapi import FastAPI
 
 from app.api.errors import register_exception_handlers
-from app.api.routes import auth, vehicles
+from app.api.routes import auth, orders, vehicles
 
 app = FastAPI(title="Car Dealership Inventory API")
 app.include_router(auth.router)
 app.include_router(vehicles.router)
+app.include_router(orders.router)
 register_exception_handlers(app)
 
 
