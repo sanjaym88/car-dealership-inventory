@@ -31,7 +31,7 @@ def get_current_user(
     try:
         user_id = decode_access_token(credentials.credentials)
     except InvalidTokenError:
-        raise unauthorized("Invalid or expired token")
+        raise unauthorized("Invalid or expired token") from None
     user = UserRepository(db).get_by_id(user_id)
     if user is None:
         raise unauthorized("Invalid or expired token")

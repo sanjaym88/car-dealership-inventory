@@ -1,5 +1,5 @@
 """Auth guard (valid token required) and admin guard (admin role required)."""
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import jwt
 import pytest
@@ -15,7 +15,7 @@ ME_URL = "/api/auth/me"
 
 
 def make_token(sub: str, expires_in: timedelta, secret: str = settings.jwt_secret) -> str:
-    payload = {"sub": sub, "exp": datetime.now(timezone.utc) + expires_in}
+    payload = {"sub": sub, "exp": datetime.now(UTC) + expires_in}
     return jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
 
 

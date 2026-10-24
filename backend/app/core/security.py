@@ -1,5 +1,5 @@
 """Password hashing and JWT helpers."""
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import bcrypt
 import jwt
@@ -19,7 +19,7 @@ def verify_password(password: str, hashed_password: str) -> bool:
 
 def create_access_token(user_id: int) -> str:
     """Signed token whose `sub` claim is the user id; expires after the configured minutes."""
-    expires_at = datetime.now(timezone.utc) + timedelta(minutes=settings.jwt_expire_minutes)
+    expires_at = datetime.now(UTC) + timedelta(minutes=settings.jwt_expire_minutes)
     payload = {"sub": str(user_id), "exp": expires_at}
     return jwt.encode(payload, settings.jwt_secret, algorithm=JWT_ALGORITHM)
 

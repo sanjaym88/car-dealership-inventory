@@ -25,7 +25,7 @@ def register(data: UserCreate, service: AuthService = Depends(get_auth_service))
     try:
         return service.register(data)
     except EmailAlreadyRegisteredError:
-        raise HTTPException(status.HTTP_409_CONFLICT, "Email already registered")
+        raise HTTPException(status.HTTP_409_CONFLICT, "Email already registered") from None
 
 
 @router.post("/login", response_model=Token)
@@ -33,7 +33,7 @@ def login(data: LoginRequest, service: AuthService = Depends(get_auth_service)):
     try:
         return Token(access_token=service.login(data.email, data.password))
     except InvalidCredentialsError:
-        raise unauthorized("Invalid email or password")
+        raise unauthorized("Invalid email or password") from None
 
 
 @router.get("/me", response_model=UserRead)

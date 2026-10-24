@@ -1,4 +1,7 @@
-"""GET /api/vehicles/search: filter by make, model, category and price range (all optional, combined with AND)."""
+"""GET /api/vehicles/search: filter by make, model, category and price range.
+
+Every filter is optional; given filters are combined with AND.
+"""
 import pytest
 
 SEARCH_URL = "/api/vehicles/search"
