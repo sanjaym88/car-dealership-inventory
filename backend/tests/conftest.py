@@ -51,6 +51,16 @@ def db_session():
         connection.close()
 
 
+@pytest.fixture(autouse=True)
+def reset_login_throttle():
+    """Failed-login counts live in memory; start every test with none."""
+    from app.core.login_throttle import login_throttle
+
+    login_throttle.clear()
+    yield
+    login_throttle.clear()
+
+
 @pytest.fixture
 def client(db_session):
     """HTTP client whose requests use the test database session."""

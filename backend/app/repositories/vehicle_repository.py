@@ -5,6 +5,7 @@ from collections.abc import Sequence
 from sqlalchemy import func, select, update
 from sqlalchemy.orm import Session
 
+from app.core.limits import MAX_STOCK
 from app.models.vehicle import Vehicle
 from app.schemas.vehicle import VehicleSearch
 
@@ -59,8 +60,13 @@ class VehicleRepository:
         return self._apply_stock_change(vehicle_id, statement, commit=False)
 
     def increment_stock(self, vehicle_id: int, amount: int) -> Vehicle | None:
-        """Add units in a single UPDATE. Returns the updated vehicle, or None if it doesn't exist."""
-        statement = update(Vehicle).where(Vehicle.id == vehicle_id).values(quantity=Vehicle.quantity + amount)
+        """Add units in a single UPDATE, never past MAX_STOCK. Returns the updated vehicle, or None
+        if it doesn't exist or the new stock would exceed the limit."""
+        statement = (
+            update(Vehicle)
+            .where(Vehicle.id == vehicle_id, Vehicle.quantity + amount <= MAX_STOCK)
+            .values(quantity=Vehicle.quantity + amount)
+        )
         return self._apply_stock_change(vehicle_id, statement)
 
     def _apply_stock_change(self, vehicle_id: int, statement, commit: bool = True) -> Vehicle | None:

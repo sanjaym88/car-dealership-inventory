@@ -7,9 +7,19 @@ from app.core import email_domain
 from app.core.config import settings
 
 
+def _lower(email: str) -> str:
+    # Mailboxes are case-insensitive in practice, so Alice@ and alice@ are one account.
+    return email.lower()
+
+
 class UserCreate(BaseModel):
     email: EmailStr
     password: str = Field(min_length=8, max_length=72)  # bcrypt ignores bytes past 72
+
+    @field_validator("email")
+    @classmethod
+    def lowercase_email(cls, email: str) -> str:
+        return _lower(email)
 
     @field_validator("email")
     @classmethod
@@ -32,6 +42,11 @@ class AdminCreate(UserCreate):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+
+    @field_validator("email")
+    @classmethod
+    def lowercase_email(cls, email: str) -> str:
+        return _lower(email)
 
 
 class Token(BaseModel):

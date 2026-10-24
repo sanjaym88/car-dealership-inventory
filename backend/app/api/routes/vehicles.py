@@ -5,12 +5,13 @@ Service errors (not found, out of stock) become HTTP responses in app/api/errors
 
 from typing import Annotated
 
-from fastapi import APIRouter, Body, Depends, Query, Response, status
+from fastapi import APIRouter, Body, Depends, Path, Query, Response, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user, require_admin
 from app.api.routes.orders import get_order_service
 from app.core.database import get_db
+from app.core.limits import MAX_ID
 from app.models.user import User
 from app.repositories.vehicle_repository import VehicleRepository
 from app.schemas.order import CheckoutSelection, PurchaseResult
@@ -32,6 +33,8 @@ def get_vehicle_service(db: Session = Depends(get_db)) -> VehicleService:
 
 
 Service = Annotated[VehicleService, Depends(get_vehicle_service)]
+# Ids outside the INTEGER range would make Postgres error (500); reject them up front.
+VehicleId = Annotated[int, Path(ge=1, le=MAX_ID)]
 
 
 @router.post("", response_model=VehicleRead, status_code=status.HTTP_201_CREATED)
@@ -50,19 +53,19 @@ def search_vehicles(criteria: Annotated[VehicleSearch, Query()], service: Servic
 
 
 @router.put("/{vehicle_id}", response_model=VehicleRead)
-def update_vehicle(vehicle_id: int, data: VehicleUpdate, service: Service):
+def update_vehicle(vehicle_id: VehicleId, data: VehicleUpdate, service: Service):
     return service.update(vehicle_id, data)
 
 
 @router.delete("/{vehicle_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
-def delete_vehicle(vehicle_id: int, service: Service):
+def delete_vehicle(vehicle_id: VehicleId, service: Service):
     service.delete(vehicle_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.post("/{vehicle_id}/purchase", response_model=PurchaseResult)
 def purchase_vehicle(
-    vehicle_id: int,
+    vehicle_id: VehicleId,
     orders: Annotated[OrderService, Depends(get_order_service)],
     user: User = Depends(get_current_user),
     selection: Annotated[CheckoutSelection | None, Body()] = None,
@@ -73,5 +76,5 @@ def purchase_vehicle(
 
 
 @router.post("/{vehicle_id}/restock", response_model=VehicleRead, dependencies=[Depends(require_admin)])
-def restock_vehicle(vehicle_id: int, data: RestockRequest, service: Service):
+def restock_vehicle(vehicle_id: VehicleId, data: RestockRequest, service: Service):
     return service.restock(vehicle_id, data.quantity)

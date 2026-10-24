@@ -4,10 +4,12 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
 
+from app.core.limits import MAX_PRICE, MAX_STOCK
+
 # Text fields are trimmed; blank strings are rejected.
 Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=100)]
-Price = Annotated[float, Field(gt=0)]
-Quantity = Annotated[int, Field(ge=0)]
+Price = Annotated[float, Field(gt=0, le=MAX_PRICE)]
+Quantity = Annotated[int, Field(ge=0, le=MAX_STOCK)]
 # Only plain web links: blocks javascript:, data: and other schemes from ending up in <img src>.
 ImageUrl = Annotated[str, StringConstraints(strip_whitespace=True, max_length=500, pattern=r"^https?://\S+$")]
 
@@ -33,7 +35,7 @@ class VehicleUpdate(BaseModel):
 
 
 class RestockRequest(BaseModel):
-    quantity: Annotated[int, Field(gt=0)]
+    quantity: Annotated[int, Field(gt=0, le=MAX_STOCK)]
 
 
 class VehicleSearch(BaseModel):

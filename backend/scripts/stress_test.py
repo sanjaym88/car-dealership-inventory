@@ -68,7 +68,9 @@ codes = [
     register(email("short"), "1234567").status_code,
     register("not-an-email").status_code,
 ]
-check("05 undeliverable domain, typo domain, short password, junk email -> 422", codes == [422] * 4, f"{codes}")
+check(
+    "05 undeliverable domain, typo domain, short password, junk email -> 422", codes == [422] * 4, f"{codes}"
+)
 
 # 6. Login failures look identical (no account enumeration)
 wrong = client.post("/api/auth/login", json={"email": alice, "password": "wrong-pass"})
@@ -146,7 +148,11 @@ codes = [
     client.post("/api/vehicles/abc/purchase", headers=user).status_code,
     client.post("/api/vehicles/99999999999999999999/purchase", headers=user).status_code,
 ]
-check("13 missing / zero / non-numeric / overflowing ids -> 404 or 422", all(c in (404, 422) for c in codes), f"{codes}")
+check(
+    "13 missing / zero / non-numeric / overflowing ids -> 404 or 422",
+    all(c in (404, 422) for c in codes),
+    f"{codes}",
+)
 
 # 14. Checkout tampering
 car = vehicle(user, price=10000, quantity=5).json()
@@ -156,10 +162,11 @@ cheat = client.post(
     json={"total_price": 1, "addons": ["tinted_windows", "tinted_windows"]},
     headers=user,
 )
+charged = cheat.json()["order"]["total_price"] if cheat.status_code == 200 else cheat.status_code
 check(
     "14 unknown option rejected; client price ignored; repeated add-on charged once",
     bad.status_code == 422 and cheat.status_code == 200 and cheat.json()["order"]["total_price"] == 10300,
-    f"{bad.status_code} total={cheat.json().get('order', {}).get('total_price') if cheat.status_code == 200 else cheat.status_code}",
+    f"{bad.status_code} total={charged}",
 )
 
 # 15. Buy until sold out
@@ -174,30 +181,47 @@ for i in range(20):
     register(email(f"racer{i}"))
     buyers.append(token(email(f"racer{i}")))
 with concurrent.futures.ThreadPoolExecutor(max_workers=20) as pool:
-    codes = list(pool.map(lambda h: client.post(f"/api/vehicles/{car['id']}/purchase", headers=h).status_code, buyers))
+    codes = list(
+        pool.map(lambda h: client.post(f"/api/vehicles/{car['id']}/purchase", headers=h).status_code, buyers)
+    )
 stock = next(x["quantity"] for x in client.get("/api/vehicles", headers=user).json() if x["id"] == car["id"])
-check("16 20 parallel buyers, 3 in stock: exactly 3 succeed", codes.count(200) == 3 and stock == 0, f"200s={codes.count(200)} 409s={codes.count(409)} stock={stock}")
+check(
+    "16 20 parallel buyers, 3 in stock: exactly 3 succeed",
+    codes.count(200) == 3 and stock == 0,
+    f"200s={codes.count(200)} 409s={codes.count(409)} stock={stock}",
+)
 
 # 17. Updates that should change nothing
 before = client.get("/api/vehicles", headers=user).json()
 target = next(x for x in before if x["id"] == v["id"])
 r1 = client.put(f"/api/vehicles/{v['id']}", json={}, headers=user)
 r2 = client.put(f"/api/vehicles/{v['id']}", json={"price": None, "make": None}, headers=user)
-check("17 empty update and explicit nulls leave the vehicle unchanged", r1.json() == target == r2.json(), f"{r1.status_code}/{r2.status_code}")
+check(
+    "17 empty update and explicit nulls leave the vehicle unchanged",
+    r1.json() == target == r2.json(),
+    f"{r1.status_code}/{r2.status_code}",
+)
 
 # 18. Deleting a sold vehicle keeps the buyer's history
 sold = vehicle(user, quantity=1).json()
 client.post(f"/api/vehicles/{sold['id']}/purchase", headers=user)
 deleted = client.delete(f"/api/vehicles/{sold['id']}", headers=admin).status_code
 history = [o for o in client.get("/api/orders/me", headers=user).json() if o["model"] == sold["model"]]
-check("18 delete a sold car: 204, and the order stays in history", deleted == 204 and history and history[0]["vehicle_id"] is None, f"{deleted} orders={len(history)}")
+check(
+    "18 delete a sold car: 204, and the order stays in history",
+    deleted == 204 and history and history[0]["vehicle_id"] is None,
+    f"{deleted} orders={len(history)}",
+)
 
 # 19. Each user sees only their own orders
 mine = client.get("/api/orders/me", headers=buyers[0]).json()
 check("19 a buyer sees only their own orders", len(mine) <= 1, f"{len(mine)} orders")
 
 # 20. Login spam: is there any throttling?
-codes = [client.post("/api/auth/login", json={"email": alice, "password": f"guess{i}"}).status_code for i in range(30)]
+codes = [
+    client.post("/api/auth/login", json={"email": alice, "password": f"guess{i}"}).status_code
+    for i in range(30)
+]
 check("20 30 rapid wrong-password logins get throttled (429)", 429 in codes, f"{sorted(set(codes))}")
 
 width = max(len(n) for n, _, _ in results)

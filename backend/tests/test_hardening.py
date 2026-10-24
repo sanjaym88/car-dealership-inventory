@@ -53,7 +53,9 @@ def test_update_rejects_numbers_beyond_the_limits(client, user_headers, create_v
 def test_restock_rejects_a_huge_amount(client, admin_headers, create_vehicle):
     vehicle = create_vehicle()
 
-    response = client.post(f"/api/vehicles/{vehicle['id']}/restock", json={"quantity": 10**12}, headers=admin_headers)
+    response = client.post(
+        f"/api/vehicles/{vehicle['id']}/restock", json={"quantity": 10**12}, headers=admin_headers
+    )
 
     assert response.status_code == 422
 
@@ -61,7 +63,9 @@ def test_restock_rejects_a_huge_amount(client, admin_headers, create_vehicle):
 def test_restock_cannot_push_stock_past_the_maximum(client, admin_headers, create_vehicle):
     vehicle = create_vehicle(quantity=99_000)
 
-    response = client.post(f"/api/vehicles/{vehicle['id']}/restock", json={"quantity": 5_000}, headers=admin_headers)
+    response = client.post(
+        f"/api/vehicles/{vehicle['id']}/restock", json={"quantity": 5_000}, headers=admin_headers
+    )
 
     assert response.status_code == 422
     assert response.json()["detail"] == "Stock cannot exceed 100,000 units"
@@ -118,7 +122,10 @@ def test_the_lock_lifts_after_the_window(client, register_user, clock):
 
     clock[0] += 15 * 60
 
-    assert client.post(LOGIN_URL, json={"email": "alice@example.com", "password": "secret123"}).status_code == 200
+    assert (
+        client.post(LOGIN_URL, json={"email": "alice@example.com", "password": "secret123"}).status_code
+        == 200
+    )
 
 
 def test_the_lock_is_per_email_and_ignores_case(client, register_user, clock):
@@ -128,7 +135,9 @@ def test_the_lock_is_per_email_and_ignores_case(client, register_user, clock):
         wrong_login(client, "ALICE@example.com")
 
     assert wrong_login(client, "alice@example.com").status_code == 429
-    assert client.post(LOGIN_URL, json={"email": "bob@example.com", "password": "secret123"}).status_code == 200
+    assert (
+        client.post(LOGIN_URL, json={"email": "bob@example.com", "password": "secret123"}).status_code == 200
+    )
 
 
 def test_a_successful_login_resets_the_count(client, register_user, clock):
