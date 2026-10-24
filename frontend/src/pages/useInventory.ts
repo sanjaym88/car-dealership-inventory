@@ -2,7 +2,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ApiError } from '../api/client'
 import { errorText } from '../api/errorText'
-import type { Vehicle, VehicleInput, VehicleSearchParams } from '../api/types'
+import type {
+  CheckoutSelection,
+  Order,
+  Vehicle,
+  VehicleInput,
+  VehicleSearchParams,
+} from '../api/types'
 import { vehiclesApi } from '../api/vehicles'
 
 export function useInventory() {
@@ -52,17 +58,19 @@ export function useInventory() {
     setResults(swap)
   }
 
-  async function purchase(vehicle: Vehicle) {
-    setError(null)
+  /** Buys one unit with the chosen options. Rethrows on failure so checkout can show why. */
+  async function purchase(vehicle: Vehicle, selection: CheckoutSelection): Promise<Order> {
     setNotice(null)
     setPurchasingId(vehicle.id)
     try {
-      replaceVehicle(await vehiclesApi.purchase(vehicle.id))
+      const result = await vehiclesApi.purchase(vehicle.id, selection)
+      replaceVehicle(result.vehicle)
       setNotice(`You bought a ${vehicle.make} ${vehicle.model}!`)
+      return result.order
     } catch (err) {
-      setError(errorText(err))
       // Out of stock on the server means our copy is stale: show it as sold out.
       if (err instanceof ApiError && err.status === 409) replaceVehicle({ ...vehicle, quantity: 0 })
+      throw err
     } finally {
       setPurchasingId(null)
     }

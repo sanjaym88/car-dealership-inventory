@@ -1,5 +1,11 @@
 import { apiFetch } from './client'
-import type { Vehicle, VehicleInput, VehicleSearchParams } from './types'
+import type {
+  CheckoutSelection,
+  PurchaseResult,
+  Vehicle,
+  VehicleInput,
+  VehicleSearchParams,
+} from './types'
 
 const BASE = '/api/vehicles'
 
@@ -24,7 +30,8 @@ export const vehiclesApi = {
 
   remove: (id: number) => apiFetch<void>(`${BASE}/${id}`, { method: 'DELETE' }),
 
-  purchase: (id: number) => apiFetch<Vehicle>(`${BASE}/${id}/purchase`, { method: 'POST' }),
+  purchase: (id: number, selection: CheckoutSelection) =>
+    apiFetch<PurchaseResult>(`${BASE}/${id}/purchase`, { method: 'POST', body: selection }),
 
   restock: (id: number, quantity: number) =>
     apiFetch<Vehicle>(`${BASE}/${id}/restock`, { method: 'POST', body: { quantity } }),

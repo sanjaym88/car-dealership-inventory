@@ -7,6 +7,7 @@ import { SearchBar } from '../components/SearchBar'
 import { VehicleCard } from '../components/VehicleCard'
 import { AdminDialogs } from './AdminDialogs'
 import type { AdminDialog } from './AdminDialogs'
+import { CheckoutDialog } from './CheckoutDialog'
 import { useInventory } from './useInventory'
 
 export function DashboardPage() {
@@ -14,6 +15,9 @@ export function DashboardPage() {
   const inv = useInventory()
   const [dialog, setDialog] = useState<AdminDialog>(null)
   const closeDialog = useCallback(() => setDialog(null), [])
+  // The vehicle being checked out, if the checkout dialog is open.
+  const [buying, setBuying] = useState<Vehicle | null>(null)
+  const closeCheckout = useCallback(() => setBuying(null), [])
 
   const adminActions = user?.is_admin
     ? {
@@ -72,7 +76,7 @@ export function DashboardPage() {
         {inv.results && inv.results.length > 0 && (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {inv.results.map((vehicle) => (
-              <VehicleCard key={vehicle.id} vehicle={vehicle} onPurchase={inv.purchase}
+              <VehicleCard key={vehicle.id} vehicle={vehicle} onPurchase={setBuying}
                 purchasing={inv.purchasingId === vehicle.id} admin={adminActions} />
             ))}
           </div>
@@ -80,6 +84,10 @@ export function DashboardPage() {
       </main>
 
       <AdminDialogs dialog={dialog} onClose={closeDialog} actions={inv} />
+      {buying && (
+        <CheckoutDialog vehicle={buying} onClose={closeCheckout}
+          onConfirm={(selection) => inv.purchase(buying, selection)} />
+      )}
     </div>
   )
 }
