@@ -1,4 +1,5 @@
 """`python -m app.scripts.seed_inventory`: fills the showroom with a varied catalog of cars and photos."""
+
 import httpx
 from sqlalchemy import select
 
@@ -60,8 +61,16 @@ def test_existing_cars_keep_their_details_but_gain_a_missing_photo(db_session):
 
 
 def test_existing_photos_are_not_replaced(db_session):
-    db_session.add(Vehicle(make="Toyota", model="Camry", category="Sedan", price=1, quantity=1,
-                           image_url="https://mine.test/camry.jpg"))
+    db_session.add(
+        Vehicle(
+            make="Toyota",
+            model="Camry",
+            category="Sedan",
+            price=1,
+            quantity=1,
+            image_url="https://mine.test/camry.jpg",
+        )
+    )
     db_session.commit()
 
     seed(db_session, fake_photo)
@@ -93,8 +102,10 @@ def wikipedia(handler) -> httpx.Client:
 
 def test_photo_lookup_returns_a_500px_wikimedia_url_without_tracking_params():
     # Wikimedia only serves standard thumbnail widths (250, 330, 500, 960, 1280...); 640 returns 400.
-    thumb = ("https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Camry.jpg/"
-             "330px-Camry.jpg?utm_source=en.wikipedia.org")
+    thumb = (
+        "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Camry.jpg/"
+        "330px-Camry.jpg?utm_source=en.wikipedia.org"
+    )
 
     def handler(request: httpx.Request) -> httpx.Response:
         assert request.url.path == "/api/rest_v1/page/summary/Toyota_Camry"

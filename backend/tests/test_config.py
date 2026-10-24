@@ -1,4 +1,5 @@
 """Settings that matter when deploying: hosted database URLs and the JWT secret."""
+
 import pytest
 from pydantic import ValidationError
 

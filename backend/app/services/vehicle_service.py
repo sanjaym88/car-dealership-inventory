@@ -1,4 +1,5 @@
 """Vehicle business rules, independent of HTTP."""
+
 from collections.abc import Sequence
 
 from app.models.vehicle import Vehicle

@@ -1,4 +1,5 @@
 """HTTP layer for checkout options and order history."""
+
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
@@ -23,9 +24,7 @@ def get_order_service(db: Session = Depends(get_db)) -> OrderService:
 Service = Annotated[OrderService, Depends(get_order_service)]
 
 
-@router.get(
-    "/checkout/options", response_model=CheckoutOptions, dependencies=[Depends(get_current_user)]
-)
+@router.get("/checkout/options", response_model=CheckoutOptions, dependencies=[Depends(get_current_user)])
 def checkout_options():
     return CheckoutOptions(
         colors=list(COLORS.values()),

@@ -1,4 +1,5 @@
 """Inventory: any logged-in user can purchase (stock -1); only admins can restock (stock +n)."""
+
 import pytest
 
 VEHICLES_URL = "/api/vehicles"
@@ -74,9 +75,7 @@ def test_admin_restock_increases_quantity(client, admin_headers, create_vehicle)
     assert response.json() == {**vehicle, "quantity": 7}
 
 
-def test_restock_makes_sold_out_vehicle_purchasable(
-    client, admin_headers, user_headers, create_vehicle
-):
+def test_restock_makes_sold_out_vehicle_purchasable(client, admin_headers, user_headers, create_vehicle):
     vehicle = create_vehicle(quantity=0)
     client.post(restock_url(vehicle["id"]), json={"quantity": 1}, headers=admin_headers)
 
@@ -101,9 +100,7 @@ def test_restock_missing_vehicle_is_404(client, admin_headers):
 
 
 @pytest.mark.parametrize("body", [{"quantity": 0}, {"quantity": -3}, {}])
-def test_restock_rejects_non_positive_or_missing_quantity(
-    client, admin_headers, create_vehicle, body
-):
+def test_restock_rejects_non_positive_or_missing_quantity(client, admin_headers, create_vehicle, body):
     vehicle = create_vehicle()
 
     response = client.post(restock_url(vehicle["id"]), json=body, headers=admin_headers)

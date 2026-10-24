@@ -3,6 +3,7 @@
 This catches typos and made-up domains such as someone@gmial.con. It cannot prove the mailbox
 itself exists; only an emailed confirmation link can do that.
 """
+
 from email_validator import EmailUndeliverableError, validate_email
 
 DNS_TIMEOUT_SECONDS = 5

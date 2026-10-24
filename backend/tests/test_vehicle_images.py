@@ -1,4 +1,5 @@
 """Vehicles can carry an optional photo URL, which orders keep a copy of."""
+
 import pytest
 
 PHOTO = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Camry.jpg/640px-Camry.jpg"
@@ -20,9 +21,7 @@ def test_vehicle_keeps_its_image_url(client, user_headers, create_vehicle):
 def test_image_url_can_be_updated(client, user_headers, create_vehicle):
     vehicle = create_vehicle()
 
-    response = client.put(
-        f"/api/vehicles/{vehicle['id']}", json={"image_url": PHOTO}, headers=user_headers
-    )
+    response = client.put(f"/api/vehicles/{vehicle['id']}", json={"image_url": PHOTO}, headers=user_headers)
 
     assert response.json()["image_url"] == PHOTO
 

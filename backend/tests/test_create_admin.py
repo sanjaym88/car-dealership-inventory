@@ -1,4 +1,5 @@
 """`python -m app.scripts.create_admin`: creates an admin, or promotes an existing user to admin."""
+
 import pytest
 from sqlalchemy import select
 
@@ -19,9 +20,7 @@ def test_creates_new_admin_who_can_log_in(client, db_session):
 
     assert exit_code == 0
     assert find_user(db_session, "boss@example.com").is_admin is True
-    login = client.post(
-        "/api/auth/login", json={"email": "boss@example.com", "password": "supersecret"}
-    )
+    login = client.post("/api/auth/login", json={"email": "boss@example.com", "password": "supersecret"})
     assert login.status_code == 200
 
 
@@ -32,9 +31,7 @@ def test_promotes_existing_user_without_changing_password(client, db_session, re
 
     assert exit_code == 0
     assert find_user(db_session, "alice@example.com").is_admin is True
-    login = client.post(
-        "/api/auth/login", json={"email": "alice@example.com", "password": "original-pass"}
-    )
+    login = client.post("/api/auth/login", json={"email": "alice@example.com", "password": "original-pass"})
     assert login.status_code == 200
 
 

@@ -2,6 +2,7 @@
 
 This is the single source of truth for option prices: the client only sends option codes.
 """
+
 from dataclasses import dataclass
 
 

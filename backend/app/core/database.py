@@ -1,4 +1,5 @@
 """SQLAlchemy engine, session factory and the declarative Base for models."""
+
 from collections.abc import Iterator
 
 from sqlalchemy import create_engine

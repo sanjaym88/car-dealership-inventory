@@ -4,6 +4,7 @@ Usage (from backend/):
     python -m app.scripts.create_admin --email admin@example.com
 The password is prompted for if --password is omitted, so it stays out of shell history.
 """
+
 import argparse
 import getpass
 import sys

@@ -1,4 +1,5 @@
 """Auth guard (valid token required) and admin guard (admin role required)."""
+
 from datetime import UTC, datetime, timedelta
 
 import jwt

@@ -3,6 +3,7 @@
 Buying a car records an order with the chosen options. Prices always come from the server's
 catalog and the vehicle's current price; nothing price-related is accepted from the client.
 """
+
 import pytest
 
 OPTIONS_URL = "/api/checkout/options"
@@ -23,14 +24,21 @@ def test_checkout_options_lists_every_choice_with_prices(client, user_headers):
     assert response.status_code == 200
     options = response.json()
     assert {c["code"] for c in options["colors"]} == {
-        "arctic_white", "midnight_black", "racing_red", "ocean_blue",
+        "arctic_white",
+        "midnight_black",
+        "racing_red",
+        "ocean_blue",
     }
     assert {p["code"]: p["price"] for p in options["packages"]} == {
-        "standard": 0, "premium": 3500, "sport": 2800,
+        "standard": 0,
+        "premium": 3500,
+        "sport": 2800,
     }
     assert {a["code"]: a["price"] for a in options["addons"]} == {
-        "extended_warranty": 1200, "tinted_windows": 300,
-        "all_weather_mats": 150, "ceramic_coating": 900,
+        "extended_warranty": 1200,
+        "tinted_windows": 300,
+        "all_weather_mats": 150,
+        "ceramic_coating": 900,
     }
     assert {d["code"]: d["price"] for d in options["delivery"]} == {"pickup": 0, "home": 250}
     assert all(item["label"] for group in options.values() for item in group)
@@ -59,9 +67,13 @@ def test_purchase_total_adds_every_chosen_option(client, user_headers, create_ve
     vehicle = create_vehicle(price=25000)
 
     order = purchase(
-        client, user_headers, vehicle["id"],
-        color="racing_red", package="premium",
-        addons=["extended_warranty", "tinted_windows"], delivery="home",
+        client,
+        user_headers,
+        vehicle["id"],
+        color="racing_red",
+        package="premium",
+        addons=["extended_warranty", "tinted_windows"],
+        delivery="home",
     ).json()["order"]
 
     # 25000 + red 500 + premium 3500 + warranty 1200 + tint 300 + delivery 250
@@ -72,7 +84,11 @@ def test_order_has_a_receipt_of_line_items(client, user_headers, create_vehicle)
     vehicle = create_vehicle(make="Toyota", model="Camry", price=25000)
 
     order = purchase(
-        client, user_headers, vehicle["id"], color="ocean_blue", addons=["all_weather_mats"],
+        client,
+        user_headers,
+        vehicle["id"],
+        color="ocean_blue",
+        addons=["all_weather_mats"],
     ).json()["order"]
 
     assert order["line_items"] == [
@@ -101,7 +117,10 @@ def test_duplicate_addons_are_charged_once(client, user_headers, create_vehicle)
     vehicle = create_vehicle(price=10000)
 
     order = purchase(
-        client, user_headers, vehicle["id"], addons=["tinted_windows", "tinted_windows"],
+        client,
+        user_headers,
+        vehicle["id"],
+        addons=["tinted_windows", "tinted_windows"],
     ).json()["order"]
 
     assert order["addons"] == ["tinted_windows"]
@@ -147,7 +166,10 @@ def test_failed_purchase_records_no_order(client, user_headers, create_vehicle):
 
 
 def test_my_orders_lists_only_my_orders_newest_first(
-    client, register_user, login_headers, create_vehicle,
+    client,
+    register_user,
+    login_headers,
+    create_vehicle,
 ):
     camry = create_vehicle(model="Camry")
     civic = create_vehicle(model="Civic")

@@ -1,4 +1,5 @@
 """Database access for vehicles. Keeps SQL out of the service layer."""
+
 from collections.abc import Sequence
 
 from sqlalchemy import func, select, update
@@ -59,11 +60,7 @@ class VehicleRepository:
 
     def increment_stock(self, vehicle_id: int, amount: int) -> Vehicle | None:
         """Add units in a single UPDATE. Returns the updated vehicle, or None if it doesn't exist."""
-        statement = (
-            update(Vehicle)
-            .where(Vehicle.id == vehicle_id)
-            .values(quantity=Vehicle.quantity + amount)
-        )
+        statement = update(Vehicle).where(Vehicle.id == vehicle_id).values(quantity=Vehicle.quantity + amount)
         return self._apply_stock_change(vehicle_id, statement)
 
     def _apply_stock_change(self, vehicle_id: int, statement, commit: bool = True) -> Vehicle | None:

@@ -1,4 +1,5 @@
 """Request/response shapes for vehicles."""
+
 from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
@@ -8,9 +9,7 @@ Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max
 Price = Annotated[float, Field(gt=0)]
 Quantity = Annotated[int, Field(ge=0)]
 # Only plain web links: blocks javascript:, data: and other schemes from ending up in <img src>.
-ImageUrl = Annotated[
-    str, StringConstraints(strip_whitespace=True, max_length=500, pattern=r"^https?://\S+$")
-]
+ImageUrl = Annotated[str, StringConstraints(strip_whitespace=True, max_length=500, pattern=r"^https?://\S+$")]
 
 
 class VehicleCreate(BaseModel):

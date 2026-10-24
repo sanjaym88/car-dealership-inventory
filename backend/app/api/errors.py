@@ -1,4 +1,5 @@
 """Maps domain errors raised by services to HTTP responses, in one place instead of per route."""
+
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 

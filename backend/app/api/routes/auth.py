@@ -1,4 +1,5 @@
 """HTTP layer for /api/auth: translates requests to service calls and errors to status codes."""
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 

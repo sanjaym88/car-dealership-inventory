@@ -1,4 +1,5 @@
 """A vehicle model in the dealership's inventory; `quantity` is how many are in stock."""
+
 from decimal import Decimal
 
 from sqlalchemy import CheckConstraint, Integer, Numeric, String

@@ -1,4 +1,5 @@
 """Vehicle CRUD: any logged-in user can add, list and update; only admins can delete."""
+
 import pytest
 
 from tests.conftest import SAMPLE_VEHICLE
@@ -56,9 +57,7 @@ def test_create_vehicle_rejects_missing_field(client, user_headers, missing_fiel
     ],
 )
 def test_create_vehicle_rejects_invalid_values(client, user_headers, bad_values):
-    response = client.post(
-        VEHICLES_URL, json={**SAMPLE_VEHICLE, **bad_values}, headers=user_headers
-    )
+    response = client.post(VEHICLES_URL, json={**SAMPLE_VEHICLE, **bad_values}, headers=user_headers)
 
     assert response.status_code == 422
 

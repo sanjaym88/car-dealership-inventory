@@ -8,6 +8,7 @@ Safe to run repeatedly: cars that already exist (same make and model) keep their
 and only gain a photo if they have none. Photos are Wikimedia Commons images, used under their
 free licences and credited in the README.
 """
+
 import argparse
 import re
 import sys
@@ -109,10 +110,16 @@ def seed(db: Session, photo_lookup: PhotoLookup) -> SeedReport:
     for car in CATALOG:
         existing = _find(db, car.make, car.model)
         if existing is None:
-            db.add(Vehicle(
-                make=car.make, model=car.model, category=car.category, price=car.price,
-                quantity=car.quantity, image_url=photo_lookup(car.wikipedia_title),
-            ))
+            db.add(
+                Vehicle(
+                    make=car.make,
+                    model=car.model,
+                    category=car.category,
+                    price=car.price,
+                    quantity=car.quantity,
+                    image_url=photo_lookup(car.wikipedia_title),
+                )
+            )
             report.created += 1
         elif existing.image_url is None and (photo := photo_lookup(car.wikipedia_title)):
             existing.image_url = photo

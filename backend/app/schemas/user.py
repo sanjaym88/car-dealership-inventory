@@ -1,4 +1,5 @@
 """Request/response shapes for users. The password never appears in a response."""
+
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from pydantic_core import PydanticCustomError
 

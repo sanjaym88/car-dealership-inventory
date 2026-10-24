@@ -1,4 +1,5 @@
 """Database access for users. Keeps SQL out of the service layer."""
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 

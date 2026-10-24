@@ -15,9 +15,7 @@ from app.core.database import Base, get_db
 from app.main import app
 
 # Tests run against a separate Postgres (docker compose service `db_test`).
-TEST_DATABASE_URL = os.getenv(
-    "TEST_DATABASE_URL", "postgresql+psycopg://car:car@localhost:5433/car_test"
-)
+TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL", "postgresql+psycopg://car:car@localhost:5433/car_test")
 engine = create_engine(TEST_DATABASE_URL)
 
 
@@ -118,9 +116,7 @@ def create_vehicle(client, user_headers):
     """Factory: add a vehicle through the API (sample values overridable) and return its JSON."""
 
     def _create(**overrides) -> dict:
-        response = client.post(
-            "/api/vehicles", json={**SAMPLE_VEHICLE, **overrides}, headers=user_headers
-        )
+        response = client.post("/api/vehicles", json={**SAMPLE_VEHICLE, **overrides}, headers=user_headers)
         assert response.status_code == 201, response.text
         return response.json()
 

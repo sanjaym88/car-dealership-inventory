@@ -1,4 +1,5 @@
 """Authentication business rules, independent of HTTP."""
+
 from app.core.security import create_access_token, hash_password, verify_password
 from app.models.user import User
 from app.repositories.user_repository import UserRepository

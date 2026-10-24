@@ -1,4 +1,5 @@
 """Smoke test proving the test harness works. Real tests start with B2 (auth)."""
+
 from fastapi.testclient import TestClient
 
 from app.main import app

@@ -1,4 +1,5 @@
 """Application settings, loaded from environment variables or a .env file."""
+
 from typing import Literal
 
 from pydantic import field_validator, model_validator
@@ -33,8 +34,7 @@ class Settings(BaseSettings):
     def require_strong_secret_in_production(self) -> "Settings":
         # Anyone who knows the signing secret can forge login tokens, so never ship the default.
         if self.environment == "production" and (
-            self.jwt_secret == DEFAULT_JWT_SECRET
-            or len(self.jwt_secret) < MIN_PRODUCTION_SECRET_LENGTH
+            self.jwt_secret == DEFAULT_JWT_SECRET or len(self.jwt_secret) < MIN_PRODUCTION_SECRET_LENGTH
         ):
             raise ValueError(
                 f"JWT_SECRET must be set to a random value of at least "

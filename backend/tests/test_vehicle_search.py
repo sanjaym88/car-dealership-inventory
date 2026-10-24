@@ -2,6 +2,7 @@
 
 Every filter is optional; given filters are combined with AND.
 """
+
 import pytest
 
 SEARCH_URL = "/api/vehicles/search"
@@ -82,9 +83,7 @@ def test_search_treats_wildcard_characters_literally(client, user_headers, inven
 
 
 def test_search_rejects_min_price_above_max_price(client, user_headers):
-    response = client.get(
-        SEARCH_URL, params={"min_price": 50000, "max_price": 10000}, headers=user_headers
-    )
+    response = client.get(SEARCH_URL, params={"min_price": 50000, "max_price": 10000}, headers=user_headers)
 
     assert response.status_code == 422
 

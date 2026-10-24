@@ -1,4 +1,5 @@
 """Request/response shapes for checkout and orders."""
+
 from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, field_validator

@@ -1,4 +1,5 @@
 """Password hashing and JWT helpers."""
+
 from datetime import UTC, datetime, timedelta
 
 import bcrypt

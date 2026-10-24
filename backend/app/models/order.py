@@ -1,5 +1,6 @@
 """A completed purchase. Keeps a snapshot of the vehicle and prices, so history stays accurate
 even if the vehicle is later edited or deleted."""
+
 from datetime import datetime
 from decimal import Decimal
 
@@ -16,9 +17,7 @@ class Order(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
     # SET NULL: deleting a vehicle from the inventory must not erase anyone's purchase history.
-    vehicle_id: Mapped[int | None] = mapped_column(
-        ForeignKey("vehicles.id", ondelete="SET NULL"), index=True
-    )
+    vehicle_id: Mapped[int | None] = mapped_column(ForeignKey("vehicles.id", ondelete="SET NULL"), index=True)
     make: Mapped[str] = mapped_column(String(100))
     model: Mapped[str] = mapped_column(String(100))
     category: Mapped[str] = mapped_column(String(50))

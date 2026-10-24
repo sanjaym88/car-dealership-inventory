@@ -2,6 +2,7 @@
 
 Service errors (not found, out of stock) become HTTP responses in app/api/errors.py.
 """
+
 from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, Query, Response, status
@@ -23,9 +24,7 @@ from app.schemas.vehicle import (
 from app.services.order_service import OrderService
 from app.services.vehicle_service import VehicleService
 
-router = APIRouter(
-    prefix="/api/vehicles", tags=["vehicles"], dependencies=[Depends(get_current_user)]
-)
+router = APIRouter(prefix="/api/vehicles", tags=["vehicles"], dependencies=[Depends(get_current_user)])
 
 
 def get_vehicle_service(db: Session = Depends(get_db)) -> VehicleService:
@@ -55,9 +54,7 @@ def update_vehicle(vehicle_id: int, data: VehicleUpdate, service: Service):
     return service.update(vehicle_id, data)
 
 
-@router.delete(
-    "/{vehicle_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)]
-)
+@router.delete("/{vehicle_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
 def delete_vehicle(vehicle_id: int, service: Service):
     service.delete(vehicle_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -75,8 +72,6 @@ def purchase_vehicle(
     return PurchaseResult(vehicle=vehicle, order=order)
 
 
-@router.post(
-    "/{vehicle_id}/restock", response_model=VehicleRead, dependencies=[Depends(require_admin)]
-)
+@router.post("/{vehicle_id}/restock", response_model=VehicleRead, dependencies=[Depends(require_admin)])
 def restock_vehicle(vehicle_id: int, data: RestockRequest, service: Service):
     return service.restock(vehicle_id, data.quantity)

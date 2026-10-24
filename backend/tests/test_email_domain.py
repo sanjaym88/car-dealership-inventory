@@ -4,6 +4,7 @@ The DNS lookup is replaced in these tests so they never depend on the network. T
 suite runs with the check switched off (CHECK_EMAIL_DOMAIN=false in conftest), because its
 fixtures use example.com, which by design accepts no mail.
 """
+
 import email_validator
 import pytest
 

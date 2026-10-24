@@ -2,6 +2,7 @@
 
 Use `Depends(get_current_user)` for any logged-in user and `Depends(require_admin)` for admin-only routes.
 """
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
@@ -17,9 +18,7 @@ bearer_scheme = HTTPBearer(auto_error=False)
 
 def unauthorized(detail: str) -> HTTPException:
     """401 with the WWW-Authenticate header the HTTP spec expects for bearer auth."""
-    return HTTPException(
-        status.HTTP_401_UNAUTHORIZED, detail, headers={"WWW-Authenticate": "Bearer"}
-    )
+    return HTTPException(status.HTTP_401_UNAUTHORIZED, detail, headers={"WWW-Authenticate": "Bearer"})
 
 
 def get_current_user(

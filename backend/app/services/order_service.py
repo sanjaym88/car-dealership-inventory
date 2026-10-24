@@ -1,4 +1,5 @@
 """Buying a vehicle: take it out of stock, price the chosen options, record the order."""
+
 from collections.abc import Sequence
 from decimal import Decimal
 

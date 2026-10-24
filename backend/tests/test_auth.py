@@ -36,9 +36,7 @@ def test_register_stores_hashed_password_not_plaintext(register_user, db_session
 
 
 def test_register_new_users_are_not_admin(client):
-    response = client.post(
-        REGISTER_URL, json={"email": "carol@example.com", "password": "secret123"}
-    )
+    response = client.post(REGISTER_URL, json={"email": "carol@example.com", "password": "secret123"})
 
     assert response.json()["is_admin"] is False
 
