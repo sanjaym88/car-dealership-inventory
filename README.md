@@ -28,6 +28,7 @@ python -m venv .venv
 pip install -r requirements-dev.txt
 copy .env.example .env           # macOS/Linux: cp
 alembic upgrade head
+python -m app.scripts.create_admin --email admin@example.com   # prompts for a password
 uvicorn app.main:app --reload    # http://localhost:8000/docs
 pytest
 ```

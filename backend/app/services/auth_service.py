@@ -23,6 +23,14 @@ class AuthService:
         user = User(email=data.email, hashed_password=hash_password(data.password), is_admin=False)
         return self.users.add(user)
 
+    def create_admin(self, data: UserCreate) -> User:
+        """Create an admin, or promote an existing user (their password is left unchanged)."""
+        user = self.users.get_by_email(data.email)
+        if user is None:
+            user = User(email=data.email, hashed_password=hash_password(data.password))
+        user.is_admin = True
+        return self.users.add(user)
+
     def login(self, email: str, password: str) -> str:
         """Return an access token, or raise the same error for unknown email and wrong password."""
         user = self.users.get_by_email(email)
