@@ -1,4 +1,4 @@
-// Layout route: renders its child routes only for logged-in users, otherwise sends them to /login.
+// Layout route: renders its child routes only for logged-in users, otherwise sends them to the welcome page.
 import { Navigate, Outlet, useLocation } from 'react-router'
 import { useAuth } from './useAuth'
 
@@ -13,6 +13,6 @@ export function ProtectedRoute() {
       </div>
     )
   }
-  if (user === null) return <Navigate to="/login" replace state={{ from: location }} />
+  if (user === null) return <Navigate to="/welcome" replace state={{ from: location }} />
   return <Outlet />
 }

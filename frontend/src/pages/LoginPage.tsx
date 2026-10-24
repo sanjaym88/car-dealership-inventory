@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router'
-import { AuthLayout } from '../components/AuthLayout'
 import { errorText } from '../api/errorText'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { FormField } from '../components/FormField'
-import { SubmitButton } from '../components/SubmitButton'
+import { CarButton } from '../components/CarButton'
 import { useAuth } from '../auth/useAuth'
 
 export function LoginPage() {
@@ -36,21 +35,23 @@ export function LoginPage() {
   }
 
   return (
-    <AuthLayout title="Welcome back" subtitle="Log in to manage the inventory.">
+    <>
+      <h2 className="text-2xl font-bold tracking-tight text-slate-900">Welcome back</h2>
+      <p className="mt-1 mb-6 text-sm text-slate-500">Log in to browse and buy.</p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <FormField label="Email" type="email" autoComplete="email" required
           value={email} onChange={(e) => setEmail(e.target.value)} />
         <FormField label="Password" type="password" autoComplete="current-password" required
           value={password} onChange={(e) => setPassword(e.target.value)} />
         <ErrorMessage message={error} />
-        <SubmitButton pending={submitting} label="Log in" pendingLabel="Logging in…" />
+        <CarButton pending={submitting} label="Log in" pendingLabel="Logging in…" />
       </form>
       <p className="mt-6 text-center text-sm text-slate-500">
         New here?{' '}
-        <Link to="/register" className="font-medium text-indigo-600 hover:underline">
+        <Link to="/register" state={location.state} className="font-medium text-rose-600 transition hover:text-rose-500 hover:underline">
           Create an account
         </Link>
       </p>
-    </AuthLayout>
+    </>
   )
 }
