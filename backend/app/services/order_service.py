@@ -44,6 +44,7 @@ class OrderService:
             make=vehicle.make,
             model=vehicle.model,
             category=vehicle.category,
+            image_url=vehicle.image_url,
             base_price=vehicle.price,
             color=selection.color,
             package=selection.package,

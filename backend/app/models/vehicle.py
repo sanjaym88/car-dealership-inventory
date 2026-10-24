@@ -21,3 +21,4 @@ class Vehicle(Base):
     category: Mapped[str] = mapped_column(String(50), index=True)
     price: Mapped[Decimal] = mapped_column(Numeric(12, 2))
     quantity: Mapped[int] = mapped_column(Integer, default=0)
+    image_url: Mapped[str | None] = mapped_column(String(500))

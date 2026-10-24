@@ -22,6 +22,7 @@ class Order(Base):
     make: Mapped[str] = mapped_column(String(100))
     model: Mapped[str] = mapped_column(String(100))
     category: Mapped[str] = mapped_column(String(50))
+    image_url: Mapped[str | None] = mapped_column(String(500))
     base_price: Mapped[Decimal] = mapped_column(Numeric(12, 2))
     color: Mapped[str] = mapped_column(String(50))
     package: Mapped[str] = mapped_column(String(50))

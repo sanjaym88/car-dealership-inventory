@@ -81,6 +81,7 @@ class OrderRead(BaseModel):
     make: str
     model: str
     category: str
+    image_url: str | None
     base_price: float
     color: str
     package: str
