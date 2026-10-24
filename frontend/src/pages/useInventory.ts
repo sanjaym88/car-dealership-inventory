@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ApiError } from '../api/client'
 import { errorText } from '../api/errorText'
-import type { Vehicle, VehicleSearchParams } from '../api/types'
+import type { Vehicle, VehicleInput, VehicleSearchParams } from '../api/types'
 import { vehiclesApi } from '../api/vehicles'
 
 export function useInventory() {
@@ -68,6 +68,35 @@ export function useInventory() {
     }
   }
 
+  // Admin actions. They rethrow on failure so the open form can show the error.
+
+  async function createVehicle(data: VehicleInput) {
+    const created = await vehiclesApi.create(data)
+    const append = (list: Vehicle[] | null) => [...(list ?? []), created]
+    setInventory(append)
+    setResults(append)
+    setNotice(`Added ${created.make} ${created.model}.`)
+  }
+
+  async function updateVehicle(id: number, data: VehicleInput) {
+    const updated = await vehiclesApi.update(id, data)
+    replaceVehicle(updated)
+    setNotice(`Saved ${updated.make} ${updated.model}.`)
+  }
+
+  async function restockVehicle(vehicle: Vehicle, units: number) {
+    replaceVehicle(await vehiclesApi.restock(vehicle.id, units))
+    setNotice(`Restocked ${vehicle.make} ${vehicle.model} (+${units}).`)
+  }
+
+  async function deleteVehicle(vehicle: Vehicle) {
+    await vehiclesApi.remove(vehicle.id)
+    const drop = (list: Vehicle[] | null) => list && list.filter((v) => v.id !== vehicle.id)
+    setInventory(drop)
+    setResults(drop)
+    setNotice(`Deleted ${vehicle.make} ${vehicle.model}.`)
+  }
+
   const categories = useMemo(
     () => [...new Set((inventory ?? []).map((v) => v.category))].sort(),
     [inventory],
@@ -77,5 +106,6 @@ export function useInventory() {
   return {
     inventory, results, searching, error, notice, purchasingId,
     categories, unitsInStock, search, clearSearch, purchase,
+    createVehicle, updateVehicle, restockVehicle, deleteVehicle,
   }
 }
