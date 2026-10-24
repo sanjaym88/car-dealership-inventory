@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     jwt_expire_minutes: int = 60
     # bcrypt work factor: 12 is a sensible production cost; tests lower it for speed.
     bcrypt_rounds: int = 12
+    # Reject sign-ups whose email domain has no mail servers (a DNS lookup per registration).
+    check_email_domain: bool = True
 
     @field_validator("database_url")
     @classmethod
