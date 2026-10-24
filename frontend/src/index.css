@@ -26,6 +26,7 @@
 @keyframes garage-door { to { transform: translateY(-101%); } }
 @keyframes panel-in { from { opacity: 0; transform: translateX(40px); } }
 @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } }
+@keyframes fade-in { from { opacity: 0; } }
 @keyframes drive-off {
   0% { transform: translateX(0); }
   60%, 100% { transform: translateX(140%); opacity: 0; }
