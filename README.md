@@ -231,6 +231,7 @@ migrates, seeds the 30-car catalog (adding only what's missing), and creates an 
 cd backend
 pytest --cov --cov-report=term-missing
 ruff check . && ruff format --check .
+python scripts/stress_test.py          # 20 hostile scenarios over HTTP against the Docker stack (:8080)
 
 # frontend
 cd frontend
@@ -259,6 +260,9 @@ What is covered:
 - **Concurrency:** 20 buyers on separate database connections, released at the same instant, race for a car
   with 5 in stock. Exactly 5 succeed, stock ends at 0, and there are exactly 5 orders. To check the test can
   catch the bug, a naive read-then-write purchase was swapped in temporarily: it sold 20 cars out of 5.
+- **Black-box stress run** (`backend/scripts/stress_test.py`): 20 hostile scenarios over real HTTP against the
+  running stack. The first run passed 16/20 and exposed duplicate accounts differing only in email case, 500s
+  from oversized numbers and ids, and no login throttling. All four are now fixed with tests (20/20).
 - **Email domains:** undeliverable domains rejected at sign-up (DNS faked in tests), the check switchable,
   login unaffected, and the admin script exempt.
 - **Checkout and orders:** option catalog, server-side totals and receipts, defaults, unknown options rejected
