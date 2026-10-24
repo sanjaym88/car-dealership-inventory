@@ -24,12 +24,12 @@ function renderAt(path: string) {
 beforeEach(() => mockedUseAuth.mockReturnValue(authState()))
 afterEach(() => vi.resetAllMocks())
 
-test('greets visitors with the brand, tagline and animated scene', () => {
+test('greets visitors with the brand, tagline and driving clips', () => {
   renderAt('/welcome')
 
   expect(screen.getByRole('heading', { level: 1, name: 'AutoVault' })).toBeInTheDocument()
   expect(screen.getByText(/your next dream car/i)).toBeInTheDocument()
-  expect(screen.getByTestId('drive-scene')).toBeInTheDocument()
+  expect(screen.getByTestId('hero-slideshow')).toBeInTheDocument()
   expect(screen.queryByRole('form')).not.toBeInTheDocument()
 })
 
