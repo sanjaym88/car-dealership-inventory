@@ -2,15 +2,15 @@ import jwt
 import pytest
 
 from app.core.config import settings
+from app.core.security import JWT_ALGORITHM
 
-REGISTER_URL = "/api/auth/register"
 LOGIN_URL = "/api/auth/login"
 CREDENTIALS = {"email": "alice@example.com", "password": "secret123"}
 
 
 @pytest.fixture
-def registered_user(client):
-    return client.post(REGISTER_URL, json=CREDENTIALS).json()
+def registered_user(register_user):
+    return register_user(**CREDENTIALS)
 
 
 def test_login_returns_bearer_token(client, registered_user):
@@ -25,7 +25,7 @@ def test_login_returns_bearer_token(client, registered_user):
 def test_login_token_identifies_the_user(client, registered_user):
     token = client.post(LOGIN_URL, json=CREDENTIALS).json()["access_token"]
 
-    payload = jwt.decode(token, settings.jwt_secret, algorithms=["HS256"])
+    payload = jwt.decode(token, settings.jwt_secret, algorithms=[JWT_ALGORITHM])
     assert payload["sub"] == str(registered_user["id"])
     assert "exp" in payload
 

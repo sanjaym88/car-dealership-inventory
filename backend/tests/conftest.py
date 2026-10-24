@@ -36,3 +36,15 @@ def client(db_session):
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+def register_user(client):
+    """Factory: register a user through the API and return the response JSON."""
+
+    def _register(email: str = "alice@example.com", password: str = "secret123") -> dict:
+        response = client.post("/api/auth/register", json={"email": email, "password": password})
+        assert response.status_code == 201, response.text
+        return response.json()
+
+    return _register

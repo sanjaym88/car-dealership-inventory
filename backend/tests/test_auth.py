@@ -18,18 +18,17 @@ def test_register_returns_201_with_new_user(client):
     assert "password" not in body
 
 
-def test_register_rejects_duplicate_email(client):
-    payload = {"email": "alice@example.com", "password": "secret123"}
-    client.post(REGISTER_URL, json=payload)
+def test_register_rejects_duplicate_email(client, register_user):
+    register_user("alice@example.com")
 
-    response = client.post(REGISTER_URL, json=payload)
+    response = client.post(REGISTER_URL, json={"email": "alice@example.com", "password": "secret123"})
 
     assert response.status_code == 409
     assert response.json()["detail"] == "Email already registered"
 
 
-def test_register_stores_hashed_password_not_plaintext(client, db_session):
-    client.post(REGISTER_URL, json={"email": "bob@example.com", "password": "secret123"})
+def test_register_stores_hashed_password_not_plaintext(register_user, db_session):
+    register_user("bob@example.com", "secret123")
 
     user = db_session.scalars(select(User).where(User.email == "bob@example.com")).one()
     assert user.hashed_password != "secret123"
