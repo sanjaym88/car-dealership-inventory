@@ -1,5 +1,7 @@
 import { authApi } from './auth'
+import { checkoutApi } from './checkout'
 import { apiFetch } from './client'
+import { ordersApi } from './orders'
 import { vehiclesApi } from './vehicles'
 
 vi.mock('./client', async (importOriginal) => ({
@@ -64,9 +66,10 @@ describe('vehiclesApi', () => {
     expect(fetchMock).toHaveBeenCalledWith('/api/vehicles/7', { method: 'DELETE' })
   })
 
-  test('purchase', async () => {
-    await vehiclesApi.purchase(7)
-    expect(fetchMock).toHaveBeenCalledWith('/api/vehicles/7/purchase', { method: 'POST' })
+  test('purchase sends the checkout selection', async () => {
+    const selection = { color: 'racing_red', package: 'sport', addons: ['tinted_windows'], delivery: 'home' }
+    await vehiclesApi.purchase(7, selection)
+    expect(fetchMock).toHaveBeenCalledWith('/api/vehicles/7/purchase', { method: 'POST', body: selection })
   })
 
   test('restock', async () => {
@@ -75,5 +78,24 @@ describe('vehiclesApi', () => {
       method: 'POST',
       body: { quantity: 3 },
     })
+  })
+})
+
+describe('checkoutApi', () => {
+  test('options', async () => {
+    await checkoutApi.options()
+    expect(fetchMock).toHaveBeenCalledWith('/api/checkout/options')
+  })
+})
+
+describe('ordersApi', () => {
+  test('mine', async () => {
+    await ordersApi.mine()
+    expect(fetchMock).toHaveBeenCalledWith('/api/orders/me')
+  })
+
+  test('all (admin)', async () => {
+    await ordersApi.all()
+    expect(fetchMock).toHaveBeenCalledWith('/api/orders')
   })
 })

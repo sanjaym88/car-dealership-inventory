@@ -2,16 +2,19 @@ import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import { ApiError } from '../api/client'
-import type { Vehicle } from '../api/types'
+import type { Order, Vehicle } from '../api/types'
+import { checkoutApi } from '../api/checkout'
 import { vehiclesApi } from '../api/vehicles'
 import { useAuth } from '../auth/useAuth'
 import { admin, alice, authState } from '../test/authMock'
+import { checkoutOptions } from '../test/checkoutFixtures'
 import { DashboardPage } from './DashboardPage'
 
 vi.mock('../auth/useAuth', () => ({ useAuth: vi.fn() }))
 vi.mock('../api/vehicles', () => ({
   vehiclesApi: { list: vi.fn(), search: vi.fn(), purchase: vi.fn() },
 }))
+vi.mock('../api/checkout', () => ({ checkoutApi: { options: vi.fn() } }))
 
 const mockedUseAuth = vi.mocked(useAuth)
 const api = vi.mocked(vehiclesApi)
@@ -169,43 +172,81 @@ test('shows an error when the search fails', async () => {
   expect(await screen.findByRole('alert')).toHaveTextContent('min_price')
 })
 
-// --- purchase (F5) ---
 
-test('buying a vehicle lowers its stock on the card and confirms the purchase', async () => {
+// --- purchase through checkout (F5) ---
+
+const camryOrder: Order = {
+  id: 7, vehicle_id: 1, make: 'Toyota', model: 'Camry', category: 'Sedan', image_url: null,
+  base_price: 25000, color: 'arctic_white', package: 'standard', addons: [], delivery: 'pickup',
+  line_items: [{ label: 'Toyota Camry (base price)', price: 25000 }],
+  total_price: 25000, created_at: '2026-10-24T10:00:00Z',
+}
+
+async function checkOut(card: HTMLElement) {
+  const user = userEvent.setup()
+  await user.click(within(card).getByRole('button', { name: /purchase/i }))
+  const dialog = await screen.findByRole('dialog', { name: /buy toyota camry/i })
+  await user.click(await within(dialog).findByRole('button', { name: /confirm purchase/i }))
+  return { dialog, user }
+}
+
+test('Purchase opens checkout; confirming buys the car and updates its stock', async () => {
   api.list.mockResolvedValue([camry])
-  api.purchase.mockResolvedValue({ ...camry, quantity: 4 })
+  vi.mocked(checkoutApi.options).mockResolvedValue(checkoutOptions)
+  api.purchase.mockResolvedValue({ vehicle: { ...camry, quantity: 4 }, order: camryOrder })
   renderDashboard()
   const card = await screen.findByRole('article')
 
-  await userEvent.click(within(card).getByRole('button', { name: /purchase/i }))
+  const { dialog, user } = await checkOut(card)
 
-  expect(api.purchase).toHaveBeenCalledWith(camry.id)
-  expect(await within(card).findByText('4 in stock')).toBeInTheDocument()
-  expect(screen.getByRole('status')).toHaveTextContent('You bought a Toyota Camry')
+  expect(api.purchase).toHaveBeenCalledWith(camry.id, {
+    color: 'arctic_white', package: 'standard', addons: [], delivery: 'pickup',
+  })
+  expect(await within(dialog).findByText(/order #7 confirmed/i)).toBeInTheDocument()
+  expect(within(card).getByText('4 in stock')).toBeInTheDocument()
   expect(screen.getByText('1 models · 4 units in stock')).toBeInTheDocument()
+  await user.click(within(dialog).getByRole('button', { name: /done/i }))
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  expect(screen.getByRole('status')).toHaveTextContent('You bought a Toyota Camry')
+})
+
+test('cancelling checkout buys nothing', async () => {
+  api.list.mockResolvedValue([camry])
+  vi.mocked(checkoutApi.options).mockResolvedValue(checkoutOptions)
+  renderDashboard()
+  const card = await screen.findByRole('article')
+  const user = userEvent.setup()
+
+  await user.click(within(card).getByRole('button', { name: /purchase/i }))
+  await user.click(within(await screen.findByRole('dialog')).getByRole('button', { name: /cancel/i }))
+
+  expect(api.purchase).not.toHaveBeenCalled()
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
 })
 
 test('buying the last unit disables the Purchase button', async () => {
   api.list.mockResolvedValue([{ ...camry, quantity: 1 }])
-  api.purchase.mockResolvedValue({ ...camry, quantity: 0 })
+  vi.mocked(checkoutApi.options).mockResolvedValue(checkoutOptions)
+  api.purchase.mockResolvedValue({ vehicle: { ...camry, quantity: 0 }, order: camryOrder })
   renderDashboard()
   const card = await screen.findByRole('article')
 
-  await userEvent.click(within(card).getByRole('button', { name: /purchase/i }))
+  await checkOut(card)
 
   expect(await within(card).findByText('Out of stock')).toBeInTheDocument()
   expect(within(card).getByRole('button', { name: /purchase/i })).toBeDisabled()
 })
 
-test('a failed purchase shows the reason and marks the vehicle sold out', async () => {
+test('a failed purchase shows the reason in checkout and marks the vehicle sold out', async () => {
   // e.g. someone else bought the last one after this page loaded
   api.list.mockResolvedValue([{ ...camry, quantity: 1 }])
+  vi.mocked(checkoutApi.options).mockResolvedValue(checkoutOptions)
   api.purchase.mockRejectedValue(new ApiError(409, 'Vehicle is out of stock'))
   renderDashboard()
   const card = await screen.findByRole('article')
 
-  await userEvent.click(within(card).getByRole('button', { name: /purchase/i }))
+  const { dialog } = await checkOut(card)
 
-  expect(await screen.findByRole('alert')).toHaveTextContent('Vehicle is out of stock')
+  expect(await within(dialog).findByRole('alert')).toHaveTextContent('Vehicle is out of stock')
   expect(within(card).getByRole('button', { name: /purchase/i })).toBeDisabled()
 })
