@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router'
 import { useAuth } from '../auth/useAuth'
+import { buttonClass } from './buttonStyles'
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   `rounded-full px-3 py-1.5 font-medium transition duration-300 ${
@@ -28,7 +29,7 @@ export function Header() {
           )}
           <span className="hidden text-slate-300 md:inline">{user?.email}</span>
           <button type="button" onClick={logout}
-            className="rounded-full bg-white/10 px-3 py-1.5 font-medium transition duration-300 hover:bg-white/20">
+            className={buttonClass({ variant: 'outline', size: 'sm' })}>
             Log out
           </button>
         </div>

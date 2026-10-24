@@ -4,6 +4,7 @@ import type { FormEvent } from 'react'
 import type { VehicleSearchParams } from '../api/types'
 import { ErrorMessage } from './ErrorMessage'
 import { FormField } from './FormField'
+import { buttonClass } from './buttonStyles'
 
 const EMPTY = { make: '', model: '', category: '', minPrice: '', maxPrice: '' }
 
@@ -69,11 +70,11 @@ export function SearchBar({ categories, onSearch, onClear }: {
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         <button type="submit"
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-indigo-500">
+          className={buttonClass({ variant: 'solid', size: 'sm' })}>
           Search
         </button>
         <button type="button" onClick={handleClear}
-          className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100">
+          className={buttonClass({ variant: 'ghost', size: 'sm' })}>
           Clear
         </button>
         <div className="grow"><ErrorMessage message={error} /></div>

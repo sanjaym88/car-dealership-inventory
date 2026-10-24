@@ -7,6 +7,7 @@ import { ErrorMessage } from './ErrorMessage'
 import { formatPrice } from './formatPrice'
 import { usePendingSubmit } from './usePendingSubmit'
 import { VehiclePhoto } from './VehiclePhoto'
+import { buttonClass } from './buttonStyles'
 
 const priceTag = (price: number) => (price === 0 ? 'Included' : `+${formatPrice(price)}`)
 
@@ -77,7 +78,7 @@ function Receipt({ order, onClose }: { order: Order; onClose: () => void }) {
       </ul>
       <div className="flex justify-end">
         <button type="button" onClick={onClose}
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-indigo-500">
+          className={buttonClass({ variant: 'solid' })}>
           Done
         </button>
       </div>
@@ -168,11 +169,11 @@ function CheckoutChoices({ vehicle, options, onConfirm, onClose }: {
         </p>
         <div className="flex gap-2">
           <button type="button" onClick={onClose}
-            className="rounded-lg px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100">
+            className={buttonClass({ variant: 'ghost' })}>
             Cancel
           </button>
           <button type="submit" disabled={pending}
-            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60">
+            className={buttonClass({ variant: 'solid' })}>
             {pending ? 'Processing…' : 'Confirm purchase'}
           </button>
         </div>

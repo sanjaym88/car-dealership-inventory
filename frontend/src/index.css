@@ -3,6 +3,8 @@
 /* Motion vocabulary shared by the landing scene, buttons and pages (`animate-*` utilities). */
 @theme {
   --ease-silk: cubic-bezier(0.22, 1, 0.36, 1);
+  /* slow, symmetric ease used by buttons (in the spirit of rivian.com) */
+  --ease-glide: cubic-bezier(0.83, 0, 0.17, 1);
 
   --animate-spin-wheel: spin-wheel 0.7s linear infinite;
   --animate-spin-wheel-fast: spin-wheel 0.25s linear infinite;

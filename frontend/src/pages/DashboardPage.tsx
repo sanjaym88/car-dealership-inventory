@@ -9,6 +9,7 @@ import { AdminDialogs } from './AdminDialogs'
 import type { AdminDialog } from './AdminDialogs'
 import { CheckoutDialog } from './CheckoutDialog'
 import { useInventory } from './useInventory'
+import { buttonClass } from '../components/buttonStyles'
 
 export function DashboardPage() {
   const { user } = useAuth()
@@ -32,7 +33,7 @@ export function DashboardPage() {
     : undefined
   const addButton = user?.is_admin && (
     <button type="button" onClick={() => setDialog({ kind: 'add' })}
-      className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-indigo-500">
+      className={buttonClass({ variant: 'light' })}>
       + Add vehicle
     </button>
   )

@@ -2,6 +2,7 @@ import { useId } from 'react'
 import type { Vehicle } from '../api/types'
 import { formatPrice } from './formatPrice'
 import { VehiclePhoto } from './VehiclePhoto'
+import { buttonClass } from './buttonStyles'
 
 export interface AdminActions {
   onEdit: (vehicle: Vehicle) => void
@@ -21,7 +22,7 @@ export function VehicleCard({ vehicle, onPurchase, purchasing = false, admin, en
   const headingId = useId()
   const inStock = vehicle.quantity > 0
   const name = `${vehicle.make} ${vehicle.model}`
-  const adminButton = 'rounded-lg px-2.5 py-1.5 text-xs font-medium transition'
+  const adminButton = 'rounded-full px-3 py-1.5 text-xs font-medium transition-colors duration-300 ease-glide'
 
   return (
     <article aria-labelledby={headingId} style={{ animationDelay: `${entranceDelay}ms` }}
@@ -44,7 +45,7 @@ export function VehicleCard({ vehicle, onPurchase, purchasing = false, admin, en
         {/* mt-auto keeps the button at the bottom so buttons line up across a row of cards */}
         <div className="mt-auto pt-5">
           <button type="button" onClick={() => onPurchase(vehicle)} disabled={!inStock || purchasing}
-            className="w-full rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-emerald-900/20 transition duration-300 hover:-translate-y-0.5 hover:bg-emerald-500 hover:shadow-lg disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none">
+            className={buttonClass({ variant: 'solid', block: true })}>
             {purchasing ? 'Purchasing…' : 'Purchase'}
           </button>
         </div>

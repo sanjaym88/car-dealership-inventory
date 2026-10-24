@@ -4,7 +4,7 @@ import { Link, Navigate, useLocation, useNavigate } from 'react-router'
 import { errorText } from '../api/errorText'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { FormField } from '../components/FormField'
-import { CarButton } from '../components/CarButton'
+import { SubmitButton } from '../components/SubmitButton'
 import { useAuth } from '../auth/useAuth'
 
 export function LoginPage() {
@@ -44,7 +44,7 @@ export function LoginPage() {
         <FormField label="Password" type="password" autoComplete="current-password" required
           value={password} onChange={(e) => setPassword(e.target.value)} />
         <ErrorMessage message={error} />
-        <CarButton pending={submitting} label="Log in" pendingLabel="Logging in…" />
+        <SubmitButton pending={submitting} label="Log in" pendingLabel="Logging in…" />
       </form>
       <p className="mt-6 text-center text-sm text-slate-500">
         New here?{' '}

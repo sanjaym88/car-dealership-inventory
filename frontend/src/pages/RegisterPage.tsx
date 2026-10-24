@@ -4,7 +4,7 @@ import { Link, Navigate, useLocation, useNavigate } from 'react-router'
 import { errorText } from '../api/errorText'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { FormField } from '../components/FormField'
-import { CarButton } from '../components/CarButton'
+import { SubmitButton } from '../components/SubmitButton'
 import { useAuth } from '../auth/useAuth'
 
 const MIN_PASSWORD_LENGTH = 8 // matches the backend rule
@@ -55,7 +55,7 @@ export function RegisterPage() {
         <FormField label="Confirm password" type="password" autoComplete="new-password" required
           value={confirm} onChange={(e) => setConfirm(e.target.value)} />
         <ErrorMessage message={error} />
-        <CarButton pending={submitting} label="Create account" pendingLabel="Creating account…" />
+        <SubmitButton pending={submitting} label="Create account" pendingLabel="Creating account…" />
       </form>
       <p className="mt-6 text-center text-sm text-slate-500">
         Already have an account?{' '}

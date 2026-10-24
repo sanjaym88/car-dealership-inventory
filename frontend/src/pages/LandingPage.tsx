@@ -5,6 +5,7 @@ import { useAuth } from '../auth/useAuth'
 import { DriveScene } from '../components/DriveScene'
 import { LoginPage } from './LoginPage'
 import { RegisterPage } from './RegisterPage'
+import { buttonClass } from '../components/buttonStyles'
 
 export type Panel = 'login' | 'register'
 
@@ -58,11 +59,11 @@ export function LandingPage({ panel }: { panel?: Panel }) {
             {!open && (
               <div className="mt-8 flex animate-fade-up flex-wrap justify-center gap-3 [animation-delay:240ms]">
                 <Link to="/register" state={state}
-                  className="whitespace-nowrap rounded-full bg-rose-600 px-6 py-3 font-semibold shadow-lg shadow-rose-900/40 transition duration-300 hover:-translate-y-0.5 hover:bg-rose-500">
+                  className={buttonClass({ variant: 'light', size: 'lg' })}>
                   Get started
                 </Link>
                 <Link to="/login" state={state}
-                  className="whitespace-nowrap rounded-full bg-white/10 px-6 py-3 font-semibold ring-1 ring-white/20 backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:bg-white/20">
+                  className={buttonClass({ variant: 'outline', size: 'lg' })}>
                   I have an account
                 </Link>
               </div>
