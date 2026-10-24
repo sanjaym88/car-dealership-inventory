@@ -2,7 +2,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.api.deps import get_current_user
 from app.core.database import get_db
+from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import LoginRequest, Token, UserCreate, UserRead
 from app.services.auth_service import (
@@ -36,3 +38,8 @@ def login(data: LoginRequest, service: AuthService = Depends(get_auth_service)):
             "Invalid email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+
+@router.get("/me", response_model=UserRead)
+def me(user: User = Depends(get_current_user)):
+    return user
