@@ -1,4 +1,4 @@
-﻿# Car Dealership Inventory System
+# Car Dealership Inventory System
 
 TDD kata: full-stack inventory system (REST API + React/Tailwind SPA).
 
