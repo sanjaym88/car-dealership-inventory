@@ -1,9 +1,12 @@
 import os
 
+# Must be set before the app is imported, since settings are read at import time.
+os.environ.setdefault("BCRYPT_ROUNDS", "4")  # minimum cost: fast tests, same code path
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 
 import app.models  # noqa: F401  (registers models on Base.metadata)
 from app.core.database import Base, get_db
@@ -14,19 +17,38 @@ TEST_DATABASE_URL = os.getenv(
     "TEST_DATABASE_URL", "postgresql+psycopg://car:car@localhost:5433/car_test"
 )
 engine = create_engine(TEST_DATABASE_URL)
-TestingSession = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def database_schema():
+    """Create the tables once for the whole test run."""
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
+    yield
+    Base.metadata.drop_all(engine)
 
 
 @pytest.fixture
 def db_session():
-    """Fresh tables for every test, dropped afterwards, so tests never share data."""
-    Base.metadata.create_all(engine)
-    session = TestingSession()
+    """Each test runs inside one outer transaction that is rolled back afterwards.
+
+    The app's own commit() calls only release savepoints, so nothing a test writes survives it,
+    and tests never see each other's data.
+    """
+    connection = engine.connect()
+    transaction = connection.begin()
+    session = Session(
+        bind=connection,
+        autoflush=False,
+        expire_on_commit=False,
+        join_transaction_mode="create_savepoint",
+    )
     try:
         yield session
     finally:
         session.close()
-        Base.metadata.drop_all(engine)
+        transaction.rollback()
+        connection.close()
 
 
 @pytest.fixture

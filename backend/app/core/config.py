@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://car:car@localhost:5432/car"
     jwt_secret: str = "change-me"
     jwt_expire_minutes: int = 60
+    # bcrypt work factor: 12 is a sensible production cost; tests lower it for speed.
+    bcrypt_rounds: int = 12
 
 
 settings = Settings()
