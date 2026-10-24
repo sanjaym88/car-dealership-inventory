@@ -1,32 +1,19 @@
 import { useCallback, useState } from 'react'
 import type { Vehicle } from '../api/types'
 import { useAuth } from '../auth/useAuth'
-import { ConfirmDelete } from '../components/ConfirmDelete'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { Header } from '../components/Header'
-import { Modal } from '../components/Modal'
-import { RestockForm } from '../components/RestockForm'
 import { SearchBar } from '../components/SearchBar'
 import { VehicleCard } from '../components/VehicleCard'
-import { VehicleForm } from '../components/VehicleForm'
+import { AdminDialogs } from './AdminDialogs'
+import type { AdminDialog } from './AdminDialogs'
 import { useInventory } from './useInventory'
-
-type Dialog =
-  | { kind: 'add' }
-  | { kind: 'edit' | 'restock' | 'delete'; vehicle: Vehicle }
-  | null
 
 export function DashboardPage() {
   const { user } = useAuth()
   const inv = useInventory()
-  const [dialog, setDialog] = useState<Dialog>(null)
+  const [dialog, setDialog] = useState<AdminDialog>(null)
   const closeDialog = useCallback(() => setDialog(null), [])
-
-  // Runs an admin action, then closes the dialog. Errors propagate so the form can show them.
-  const andClose = (action: () => Promise<void>) => async () => {
-    await action()
-    closeDialog()
-  }
 
   const adminActions = user?.is_admin
     ? {
@@ -92,30 +79,7 @@ export function DashboardPage() {
         )}
       </main>
 
-      {dialog?.kind === 'add' && (
-        <Modal title="Add vehicle" onClose={closeDialog}>
-          <VehicleForm submitLabel="Add vehicle" onCancel={closeDialog}
-            onSubmit={(data) => andClose(() => inv.createVehicle(data))()} />
-        </Modal>
-      )}
-      {dialog?.kind === 'edit' && (
-        <Modal title={`Edit ${dialog.vehicle.make} ${dialog.vehicle.model}`} onClose={closeDialog}>
-          <VehicleForm initial={dialog.vehicle} submitLabel="Save changes" onCancel={closeDialog}
-            onSubmit={(data) => andClose(() => inv.updateVehicle(dialog.vehicle.id, data))()} />
-        </Modal>
-      )}
-      {dialog?.kind === 'restock' && (
-        <Modal title={`Restock ${dialog.vehicle.make} ${dialog.vehicle.model}`} onClose={closeDialog}>
-          <RestockForm onCancel={closeDialog}
-            onSubmit={(units) => andClose(() => inv.restockVehicle(dialog.vehicle, units))()} />
-        </Modal>
-      )}
-      {dialog?.kind === 'delete' && (
-        <Modal title={`Delete ${dialog.vehicle.make} ${dialog.vehicle.model}?`} onClose={closeDialog}>
-          <ConfirmDelete name={`${dialog.vehicle.make} ${dialog.vehicle.model}`} onCancel={closeDialog}
-            onConfirm={andClose(() => inv.deleteVehicle(dialog.vehicle))} />
-        </Modal>
-      )}
+      <AdminDialogs dialog={dialog} onClose={closeDialog} actions={inv} />
     </div>
   )
 }
