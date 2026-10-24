@@ -248,8 +248,8 @@ All tests pass; full output is in [`docs/test-report/`](docs/test-report/).
 
 | Suite | Tests | Result | Coverage |
 |---|---|---|---|
-| Backend (pytest, real PostgreSQL) | 130 | ✅ all passed | 99% of statements |
-| Frontend (Vitest + Testing Library) | 147 | ✅ all passed | 99.0% statements · 95.6% branches |
+| Backend (pytest, real PostgreSQL) | 130 | All passed | 99% of statements |
+| Frontend (Vitest + Testing Library) | 147 | All passed | 99.0% statements · 95.6% branches |
 
 What is covered:
 - **Auth:** registration rules, bcrypt hashing, login, identical errors for unknown email and wrong password,
