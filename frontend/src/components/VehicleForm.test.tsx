@@ -79,3 +79,33 @@ test('cancel closes without submitting', async () => {
   expect(onCancel).toHaveBeenCalled()
   expect(onSubmit).not.toHaveBeenCalled()
 })
+
+// --- photo URL ---
+
+test('submits an optional photo URL', async () => {
+  const { onSubmit, user } = renderForm(camry)
+
+  await fill(user, { 'photo url': '  https://example.com/camry.jpg ' })
+  await user.click(screen.getByRole('button', { name: 'Save' }))
+
+  expect(onSubmit).toHaveBeenCalledWith({ ...camry, image_url: 'https://example.com/camry.jpg' })
+})
+
+test('starts with the current photo URL when editing', () => {
+  renderForm({ ...camry, image_url: 'https://example.com/camry.jpg' })
+
+  expect(screen.getByLabelText(/^photo url/i)).toHaveValue('https://example.com/camry.jpg')
+})
+
+test.each(['not a url', 'ftp://example.com/car.jpg', 'javascript:alert(1)'])(
+  'rejects the photo URL %j',
+  async (url) => {
+    const { onSubmit, user } = renderForm(camry)
+
+    await fill(user, { 'photo url': url })
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Photo URL must start with http:// or https://')
+    expect(onSubmit).not.toHaveBeenCalled()
+  },
+)
