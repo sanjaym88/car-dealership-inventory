@@ -28,3 +28,9 @@ test('unknown paths fall back to the dashboard (and so to login)', () => {
 
   expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument()
 })
+
+test('my orders needs a login', () => {
+  renderAt('/orders')
+
+  expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument()
+})
