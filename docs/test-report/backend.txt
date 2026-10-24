@@ -1,0 +1,121 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.3, pytest-8.3.4, pluggy-1.7.0 -- C:\Users\vatsala\OneDrive\Desktop\car\backend\.venv\Scripts\python.exe
+rootdir: C:\Users\vatsala\OneDrive\Desktop\car\backend
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1, cov-6.0.0
+collecting ... collected 78 items
+
+tests/test_auth.py::test_register_returns_201_with_new_user PASSED       [  1%]
+tests/test_auth.py::test_register_rejects_duplicate_email PASSED         [  2%]
+tests/test_auth.py::test_register_stores_hashed_password_not_plaintext PASSED [  3%]
+tests/test_auth.py::test_register_new_users_are_not_admin PASSED         [  5%]
+tests/test_auth.py::test_register_rejects_invalid_email PASSED           [  6%]
+tests/test_auth.py::test_register_rejects_short_password PASSED          [  7%]
+tests/test_create_admin.py::test_creates_new_admin_who_can_log_in PASSED [  8%]
+tests/test_create_admin.py::test_promotes_existing_user_without_changing_password PASSED [ 10%]
+tests/test_create_admin.py::test_promoted_user_passes_admin_guard PASSED [ 11%]
+tests/test_create_admin.py::test_rejects_invalid_input_without_creating_anyone[args0] PASSED [ 12%]
+tests/test_create_admin.py::test_rejects_invalid_input_without_creating_anyone[args1] PASSED [ 14%]
+tests/test_guards.py::test_me_returns_current_user PASSED                [ 15%]
+tests/test_guards.py::test_me_without_token_is_401 PASSED                [ 16%]
+tests/test_guards.py::test_me_with_garbage_token_is_401 PASSED           [ 17%]
+tests/test_guards.py::test_me_with_token_signed_by_wrong_secret_is_401 PASSED [ 19%]
+tests/test_guards.py::test_me_with_expired_token_is_401 PASSED           [ 20%]
+tests/test_guards.py::test_me_with_token_for_missing_user_is_401 PASSED  [ 21%]
+tests/test_guards.py::test_admin_guard_allows_admin PASSED               [ 23%]
+tests/test_guards.py::test_admin_guard_rejects_regular_user_with_403 PASSED [ 24%]
+tests/test_guards.py::test_admin_guard_rejects_anonymous_with_401 PASSED [ 25%]
+tests/test_health.py::test_health_returns_ok PASSED                      [ 26%]
+tests/test_inventory.py::test_purchase_decreases_quantity_by_one PASSED  [ 28%]
+tests/test_inventory.py::test_purchase_of_last_unit_leaves_zero PASSED   [ 29%]
+tests/test_inventory.py::test_purchase_when_out_of_stock_is_409_and_stock_stays_zero PASSED [ 30%]
+tests/test_inventory.py::test_purchase_missing_vehicle_is_404 PASSED     [ 32%]
+tests/test_inventory.py::test_purchase_requires_login PASSED             [ 33%]
+tests/test_inventory.py::test_admin_restock_increases_quantity PASSED    [ 34%]
+tests/test_inventory.py::test_restock_makes_sold_out_vehicle_purchasable PASSED [ 35%]
+tests/test_inventory.py::test_regular_user_cannot_restock PASSED         [ 37%]
+tests/test_inventory.py::test_restock_missing_vehicle_is_404 PASSED      [ 38%]
+tests/test_inventory.py::test_restock_rejects_non_positive_or_missing_quantity[body0] PASSED [ 39%]
+tests/test_inventory.py::test_restock_rejects_non_positive_or_missing_quantity[body1] PASSED [ 41%]
+tests/test_inventory.py::test_restock_rejects_non_positive_or_missing_quantity[body2] PASSED [ 42%]
+tests/test_inventory.py::test_restock_requires_login PASSED              [ 43%]
+tests/test_login.py::test_login_returns_bearer_token PASSED              [ 44%]
+tests/test_login.py::test_login_token_identifies_the_user PASSED         [ 46%]
+tests/test_login.py::test_login_rejects_wrong_password PASSED            [ 47%]
+tests/test_login.py::test_login_rejects_unknown_email_with_same_message PASSED [ 48%]
+tests/test_login.py::test_login_rejects_missing_fields PASSED            [ 50%]
+tests/test_vehicle_search.py::test_search_by_make_is_case_insensitive_and_partial PASSED [ 51%]
+tests/test_vehicle_search.py::test_search_by_model PASSED                [ 52%]
+tests/test_vehicle_search.py::test_search_by_category_matches_whole_category_ignoring_case PASSED [ 53%]
+tests/test_vehicle_search.py::test_search_by_price_range_is_inclusive PASSED [ 55%]
+tests/test_vehicle_search.py::test_search_with_only_min_price PASSED     [ 56%]
+tests/test_vehicle_search.py::test_search_with_only_max_price PASSED     [ 57%]
+tests/test_vehicle_search.py::test_search_combines_filters_with_and PASSED [ 58%]
+tests/test_vehicle_search.py::test_search_without_filters_returns_everything PASSED [ 60%]
+tests/test_vehicle_search.py::test_search_with_no_matches_returns_empty_list PASSED [ 61%]
+tests/test_vehicle_search.py::test_search_treats_wildcard_characters_literally PASSED [ 62%]
+tests/test_vehicle_search.py::test_search_rejects_min_price_above_max_price PASSED [ 64%]
+tests/test_vehicle_search.py::test_search_rejects_negative_price PASSED  [ 65%]
+tests/test_vehicle_search.py::test_search_requires_login PASSED          [ 66%]
+tests/test_vehicles.py::test_create_vehicle_returns_201_with_generated_id PASSED [ 67%]
+tests/test_vehicles.py::test_create_vehicle_ids_are_unique PASSED        [ 69%]
+tests/test_vehicles.py::test_create_vehicle_requires_login PASSED        [ 70%]
+tests/test_vehicles.py::test_create_vehicle_rejects_missing_field[make] PASSED [ 71%]
+tests/test_vehicles.py::test_create_vehicle_rejects_missing_field[model] PASSED [ 73%]
+tests/test_vehicles.py::test_create_vehicle_rejects_missing_field[category] PASSED [ 74%]
+tests/test_vehicles.py::test_create_vehicle_rejects_missing_field[price] PASSED [ 75%]
+tests/test_vehicles.py::test_create_vehicle_rejects_missing_field[quantity] PASSED [ 76%]
+tests/test_vehicles.py::test_create_vehicle_rejects_invalid_values[bad_values0] PASSED [ 78%]
+tests/test_vehicles.py::test_create_vehicle_rejects_invalid_values[bad_values1] PASSED [ 79%]
+tests/test_vehicles.py::test_create_vehicle_rejects_invalid_values[bad_values2] PASSED [ 80%]
+tests/test_vehicles.py::test_create_vehicle_rejects_invalid_values[bad_values3] PASSED [ 82%]
+tests/test_vehicles.py::test_create_vehicle_rejects_invalid_values[bad_values4] PASSED [ 83%]
+tests/test_vehicles.py::test_create_vehicle_rejects_invalid_values[bad_values5] PASSED [ 84%]
+tests/test_vehicles.py::test_list_vehicles_is_empty_initially PASSED     [ 85%]
+tests/test_vehicles.py::test_list_vehicles_returns_all_vehicles PASSED   [ 87%]
+tests/test_vehicles.py::test_list_vehicles_requires_login PASSED         [ 88%]
+tests/test_vehicles.py::test_update_vehicle_changes_only_given_fields PASSED [ 89%]
+tests/test_vehicles.py::test_update_vehicle_is_persisted PASSED          [ 91%]
+tests/test_vehicles.py::test_update_missing_vehicle_is_404 PASSED        [ 92%]
+tests/test_vehicles.py::test_update_vehicle_rejects_invalid_values PASSED [ 93%]
+tests/test_vehicles.py::test_update_vehicle_requires_login PASSED        [ 94%]
+tests/test_vehicles.py::test_admin_can_delete_vehicle PASSED             [ 96%]
+tests/test_vehicles.py::test_regular_user_cannot_delete_vehicle PASSED   [ 97%]
+tests/test_vehicles.py::test_delete_missing_vehicle_is_404 PASSED        [ 98%]
+tests/test_vehicles.py::test_delete_vehicle_requires_login PASSED        [100%]
+
+---------- coverage: platform win32, python 3.12.3-final-0 -----------
+Name                                     Stmts   Miss  Cover   Missing
+----------------------------------------------------------------------
+app\__init__.py                              0      0   100%
+app\api\__init__.py                          0      0   100%
+app\api\deps.py                             25      0   100%
+app\api\errors.py                            9      0   100%
+app\api\routes\__init__.py                   0      0   100%
+app\api\routes\auth.py                      26      0   100%
+app\api\routes\vehicles.py                  34      0   100%
+app\core\__init__.py                         0      0   100%
+app\core\config.py                           8      0   100%
+app\core\database.py                        13      4    69%   19-23
+app\core\security.py                        21      0   100%
+app\main.py                                 10      0   100%
+app\models\__init__.py                       3      0   100%
+app\models\user.py                           9      0   100%
+app\models\vehicle.py                       13      0   100%
+app\repositories\__init__.py                 0      0   100%
+app\repositories\user_repository.py         15      0   100%
+app\repositories\vehicle_repository.py      45      0   100%
+app\schemas\__init__.py                      0      0   100%
+app\schemas\user.py                         15      0   100%
+app\schemas\vehicle.py                      38      0   100%
+app\scripts\__init__.py                      0      0   100%
+app\scripts\create_admin.py                 29      1    97%   44
+app\services\__init__.py                     0      0   100%
+app\services\auth_service.py                27      0   100%
+app\services\vehicle_service.py             40      0   100%
+----------------------------------------------------------------------
+TOTAL                                      380      5    99%
+
+
+============================= 78 passed in 5.79s ==============================
