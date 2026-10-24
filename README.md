@@ -9,6 +9,7 @@ manage the inventory and see every sale.
 - **Backend:** FastAPI REST API with JWT authentication and role-based access, backed by PostgreSQL.
 - **Frontend:** React + TypeScript single-page app styled with Tailwind CSS.
 - **Quality:** 277 automated tests (130 backend, 147 frontend) at ~99% coverage, plus linting, run on every push by GitHub Actions.
+- **Live demo:** https://car-dealership-inventory-x2si.vercel.app (the free backend sleeps when idle; the first request can take up to a minute)
 - **One command to try it:** `docker compose --profile app up --build`, then open http://localhost:8080.
 
 ![Landing page](docs/screenshots/01-landing.jpg)
@@ -201,7 +202,7 @@ Open http://localhost:5173. Register a regular account, or log in as the admin y
 
 ## Deployment
 
-**Live demo:** _TODO: add the Vercel URL once deployed_
+**Live demo:** https://car-dealership-inventory-x2si.vercel.app
 
 > The backend runs on Render's free plan and goes to sleep after 15 minutes without traffic. The first request
 > after that can take about a minute while it wakes up.
