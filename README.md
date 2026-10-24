@@ -3,13 +3,14 @@
 [![CI](https://github.com/sanjaym88/car-dealership-inventory/actions/workflows/ci.yml/badge.svg)](https://github.com/sanjaym88/car-dealership-inventory/actions/workflows/ci.yml)
 
 A full-stack inventory system for a car dealership, built test-first as a TDD kata. Customers register, browse
-and search the inventory, and buy vehicles; admins add, edit, restock and delete them.
+and search a showroom of 30 cars with real photos, customise and buy a car, and see their order history. Admins
+manage the inventory and see every sale.
 
 - **Backend:** FastAPI REST API with JWT authentication and role-based access, backed by PostgreSQL.
 - **Frontend:** React + TypeScript single-page app styled with Tailwind CSS.
-- **Quality:** 178 automated tests (86 backend, 92 frontend) at ~99% coverage, run on every push by GitHub Actions.
+- **Quality:** 249 automated tests (122 backend, 127 frontend) at ~99% coverage, run on every push by GitHub Actions.
 
-![Admin dashboard](docs/screenshots/03-dashboard-admin.jpg)
+![Inventory with car photos](docs/screenshots/03-inventory.jpg)
 
 ---
 
@@ -34,18 +35,26 @@ and search the inventory, and buy vehicles; admins add, edit, restock and delete
 
 **Everyone (logged in)**
 - Register and log in; the session survives a page refresh and expired tokens are discarded cleanly.
-- Dashboard of all vehicles with price, category and live stock, plus an inventory summary.
+- Showroom of vehicles with photos, price, category and live stock, plus an inventory summary.
 - Search and filter by make, model (partial, case-insensitive), category and price range.
-- **Purchase** a vehicle; the button is disabled when it is out of stock.
+- **Checkout:** *Purchase* opens a checkout where you choose paint, trim package, add-ons and delivery, with a
+  live total. Confirming returns an itemised receipt with an order number. The button is disabled when a car is
+  out of stock.
+- **My orders:** every purchase with its photo, date, receipt and total.
 
 **Admins**
-- Add, edit, restock and delete vehicles from dialogs on the dashboard.
-- Admin controls are hidden from regular users *and* enforced by the API (`403` for non-admins).
+- Add, edit (including a photo URL), restock and delete vehicles from dialogs on the dashboard.
+- **Sales** page: order count, revenue, and every sale with its buyer.
+- Admin controls and pages are hidden from regular users *and* enforced by the API (`403` for non-admins).
 
 **Robustness**
 - Validation on both sides: the frontend checks input before sending, and the API and the database
   (check constraints) enforce the same rules.
-- Purchases are atomic, so two buyers can't both get the last car.
+- Prices are always computed on the server. The browser sends only option codes, so a modified client can't
+  change what it pays.
+- A purchase takes the unit out of stock and records the order in one transaction, so two buyers can't both
+  get the last car, and no order exists without its stock change.
+- Orders keep a snapshot of the car and prices, so history stays correct if a car is later edited or deleted.
 - Responsive layout from phone to desktop; accessible labels, dialogs and status messages.
 
 ## Screenshots
@@ -54,11 +63,13 @@ and search the inventory, and buy vehicles; admins add, edit, restock and delete
 |---|---|
 | ![Login](docs/screenshots/01-login.jpg) | ![Register](docs/screenshots/02-register.jpg) |
 
-| Search + purchase confirmation | Add vehicle (admin) |
+| Checkout with customisation | My orders |
 |---|---|
-| ![Search and purchase](docs/screenshots/04-search-and-purchase.jpg) | ![Add vehicle dialog](docs/screenshots/05-add-vehicle-dialog.jpg) |
+| ![Checkout](docs/screenshots/04-checkout.jpg) | ![My orders](docs/screenshots/05-my-orders.jpg) |
 
-<p align="center"><img src="docs/screenshots/06-mobile.jpg" alt="Mobile view" width="300"></p>
+| Sales (admin) | Phone |
+|---|---|
+| ![Sales](docs/screenshots/06-sales.jpg) | <img src="docs/screenshots/07-mobile.jpg" alt="Mobile view" width="260"> |
 
 ## Tech stack
 
@@ -76,22 +87,22 @@ and search the inventory, and buy vehicles; admins add, edit, restock and delete
 car/
 ├── backend/
 │   ├── app/
-│   │   ├── api/routes/     HTTP layer: auth.py, vehicles.py
+│   │   ├── api/routes/     HTTP layer: auth.py, vehicles.py, orders.py
 │   │   ├── api/deps.py     auth guard (get_current_user) and admin guard (require_admin)
 │   │   ├── api/errors.py   maps domain errors to HTTP status codes in one place
-│   │   ├── services/       business rules (AuthService, VehicleService), no HTTP or SQL
-│   │   ├── repositories/   all database access (UserRepository, VehicleRepository)
-│   │   ├── models/         SQLAlchemy tables (User, Vehicle)
+│   │   ├── services/       business rules (Auth, Vehicle, Order services; checkout option catalog)
+│   │   ├── repositories/   all database access (User, Vehicle, Order repositories)
+│   │   ├── models/         SQLAlchemy tables (User, Vehicle, Order)
 │   │   ├── schemas/        Pydantic request/response models and validation
 │   │   ├── core/           settings, DB session, password hashing and JWT
-│   │   └── scripts/        create_admin CLI
+│   │   └── scripts/        create_admin and seed_inventory CLIs
 │   ├── alembic/            database migrations
 │   └── tests/              pytest suite (runs against a real Postgres test DB)
 ├── frontend/src/
 │   ├── api/                fetch client, typed endpoint functions, shared types
-│   ├── auth/               AuthProvider, useAuth, ProtectedRoute, token storage
-│   ├── components/         VehicleCard, SearchBar, VehicleForm, Modal, …
-│   └── pages/              Login, Register, Dashboard (+ useInventory hook, AdminDialogs)
+│   ├── auth/               AuthProvider, useAuth, ProtectedRoute, AdminRoute, token storage
+│   ├── components/         VehicleCard, VehiclePhoto, SearchBar, CheckoutForm, VehicleForm, Modal, …
+│   └── pages/              Login, Register, Dashboard, Checkout, My orders, Sales (+ hooks)
 ├── docs/                   screenshots and test report
 └── docker-compose.yml      dev DB (5432) and test DB (5433)
 ```
@@ -113,10 +124,14 @@ Interactive docs are served at `http://localhost:8000/docs` while the backend is
 | POST | `/api/vehicles` | logged in | Add a vehicle |
 | PUT | `/api/vehicles/{id}` | logged in | Partial update |
 | DELETE | `/api/vehicles/{id}` | **admin** | Delete a vehicle (`204`) |
-| POST | `/api/vehicles/{id}/purchase` | logged in | Stock −1; `409` when out of stock |
+| POST | `/api/vehicles/{id}/purchase` | logged in | Optional body `{color, package, addons, delivery}` (option codes). Stock −1, records an order, returns `{vehicle, order}`; `409` when out of stock, `422` for unknown options |
 | POST | `/api/vehicles/{id}/restock` | **admin** | Body `{"quantity": n}`, stock +n |
+| GET | `/api/checkout/options` | logged in | Paint, packages, add-ons and delivery with prices |
+| GET | `/api/orders/me` | logged in | My orders, newest first, each with a line-item receipt |
+| GET | `/api/orders` | **admin** | All orders with the buyer's email |
 
-Every vehicle has a unique `id`, `make`, `model`, `category`, `price` (> 0) and `quantity` (≥ 0).
+Every vehicle has a unique `id`, `make`, `model`, `category`, `price` (> 0), `quantity` (≥ 0) and an optional
+`image_url` (http/https only).
 Protected routes expect `Authorization: Bearer <token>`.
 
 ## Running locally
@@ -138,11 +153,14 @@ python -m venv .venv
 pip install -r requirements-dev.txt
 copy .env.example .env                 # macOS/Linux: cp .env.example .env  (set JWT_SECRET)
 alembic upgrade head                   # create the tables
+python -m app.scripts.seed_inventory   # 30 cars with photos (add --no-photos to work offline)
 python -m app.scripts.create_admin --email admin@example.com   # prompts for a password
 uvicorn app.main:app --reload          # API on http://localhost:8000
 ```
 
-`create_admin` creates an admin, or promotes an existing user. Registration through the API never grants admin.
+- `create_admin` creates an admin, or promotes an existing user. Registration through the API never grants admin.
+- `seed_inventory` is safe to re-run. It adds missing cars and fills in missing photos, but never changes existing
+  prices or stock.
 
 ### 3. Frontend
 
@@ -179,6 +197,7 @@ To create the first admin on the hosted database, run the script locally against
 ```bash
 cd backend
 set DATABASE_URL=<neon connection string>      # macOS/Linux: export DATABASE_URL=...
+python -m app.scripts.seed_inventory
 python -m app.scripts.create_admin --email you@example.com
 ```
 
@@ -202,8 +221,8 @@ All tests pass; full output is in [`docs/test-report/`](docs/test-report/).
 
 | Suite | Tests | Result | Coverage |
 |---|---|---|---|
-| Backend (pytest, real PostgreSQL) | 86 | ✅ all passed | 99% of statements |
-| Frontend (Vitest + Testing Library) | 92 | ✅ all passed | 99.1% statements · 95.8% branches |
+| Backend (pytest, real PostgreSQL) | 122 | ✅ all passed | 99% of statements |
+| Frontend (Vitest + Testing Library) | 127 | ✅ all passed | 98.8% statements · 94.9% branches |
 
 What is covered:
 - **Auth:** registration rules, bcrypt hashing, login, identical errors for unknown email and wrong password,
@@ -213,16 +232,27 @@ What is covered:
   updates, and `404`s.
 - **Search:** each filter, combined filters, inclusive price bounds, literal `%`/`_`, and invalid ranges.
 - **Inventory:** purchase down to zero, `409` when sold out, restock validation.
-- **Frontend:** API client error handling, session restore, route guards, form validation and every dashboard
-  flow (search, purchase, add, edit, restock, delete), with user and admin views.
+- **Checkout and orders:** option catalog, server-side totals and receipts, defaults, unknown options rejected
+  without buying, client prices ignored, no order on a failed purchase, own-orders-only history, admin sales,
+  and history surviving vehicle deletion.
+- **Seeding and photos:** idempotent seeding, never overwriting data, and the Wikipedia photo lookup (including
+  failures and offline).
+- **Frontend:** API client error handling, session restore, route guards, form validation, checkout with live
+  totals and receipt, order history and sales pages, and every dashboard flow (search, purchase, add, edit,
+  restock, delete), with user and admin views.
 
 Raw output: [backend.txt](docs/test-report/backend.txt) · [frontend.txt](docs/test-report/frontend.txt)
 
 ## Design decisions
 
-- **Atomic stock changes.** Purchase is a single `UPDATE … SET quantity = quantity - 1 WHERE id = ? AND
-  quantity > 0`. If no row is updated, the vehicle is either missing (`404`) or sold out (`409`). There is no
-  read-then-write race.
+- **Atomic purchases.** Buying runs `UPDATE … SET quantity = quantity - 1 WHERE id = ? AND quantity > 0` and
+  inserts the order in the same transaction. If no row is updated, the vehicle is either missing (`404`) or sold
+  out (`409`) and nothing is recorded. There is no read-then-write race.
+- **The server owns the prices.** The option catalog lives in one backend module. Checkout sends option codes
+  only, and the API prices them, stores the receipt as line items, and ignores any price field from the client.
+  The total shown during checkout is an estimate from the same catalog.
+- **Orders are snapshots.** An order copies the make, model, photo and prices at purchase time. Its link to the
+  vehicle uses `ON DELETE SET NULL`, so deleting or repricing a car never rewrites anyone's history.
 - **No account enumeration.** Login returns the same `401 Invalid email or password` whether the email is
   unknown or the password is wrong.
 - **Who can do what.** The kata marks only DELETE and restock as admin-only, so the API follows that; add and
@@ -234,6 +264,13 @@ Raw output: [backend.txt](docs/test-report/backend.txt) · [frontend.txt](docs/t
   the suite from about 50s to about 3s.
 - **Domain errors, not HTTP, in services.** Services raise `VehicleNotFoundError` or `OutOfStockError`;
   `api/errors.py` maps them to status codes in one place.
+
+**Known limitation:** registration checks that an email is well-formed, not that the mailbox exists or belongs to
+the user. Real verification would need an emailed confirmation link and an email-sending service.
+
+**Photo credits:** car photos are the lead images of the models' Wikipedia articles, hosted on
+[Wikimedia Commons](https://commons.wikimedia.org/) under their respective free licences (mostly CC BY-SA).
+Each file's author and licence are on its Commons page.
 
 ## Development process
 
