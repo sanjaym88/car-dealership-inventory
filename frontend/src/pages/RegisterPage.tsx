@@ -5,6 +5,7 @@ import { AuthLayout } from '../components/AuthLayout'
 import { errorText } from '../api/errorText'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { FormField } from '../components/FormField'
+import { SubmitButton } from '../components/SubmitButton'
 import { useAuth } from '../auth/useAuth'
 
 const MIN_PASSWORD_LENGTH = 8 // matches the backend rule
@@ -52,10 +53,7 @@ export function RegisterPage() {
         <FormField label="Confirm password" type="password" autoComplete="new-password" required
           value={confirm} onChange={(e) => setConfirm(e.target.value)} />
         <ErrorMessage message={error} />
-        <button type="submit" disabled={submitting}
-          className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 font-semibold text-white shadow transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60">
-          {submitting ? 'Creating account…' : 'Create account'}
-        </button>
+        <SubmitButton pending={submitting} label="Create account" pendingLabel="Creating account…" />
       </form>
       <p className="mt-6 text-center text-sm text-slate-500">
         Already have an account?{' '}
