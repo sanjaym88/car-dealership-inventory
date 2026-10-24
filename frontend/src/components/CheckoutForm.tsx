@@ -62,7 +62,7 @@ function Receipt({ order, onClose }: { order: Order; onClose: () => void }) {
   return (
     <section aria-label={`Order #${order.id} confirmed`} className="space-y-4">
       <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800 ring-1 ring-emerald-200">
-        🎉 Order #{order.id} confirmed: your {order.make} {order.model} is on its way.
+        Order #{order.id} confirmed: your {order.make} {order.model} is on its way.
       </p>
       <ul className="divide-y divide-slate-100 text-sm">
         {order.line_items.map((item) => (

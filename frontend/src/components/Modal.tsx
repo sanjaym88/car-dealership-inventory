@@ -32,10 +32,10 @@ export function Modal({ title, onClose, children }: {
   }, [])
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex animate-[fade-in_0.25s_ease-out] items-end justify-center bg-slate-950/70 p-4 backdrop-blur-sm sm:items-center"
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/75 p-4 sm:items-center"
       onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <div role="dialog" aria-modal="true" aria-labelledby={titleId}
-        className="max-h-[90vh] w-full max-w-lg animate-fade-up overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl">
+        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
         <h2 id={titleId} className="mb-4 text-lg font-semibold text-slate-900">{title}</h2>
         {children}
       </div>

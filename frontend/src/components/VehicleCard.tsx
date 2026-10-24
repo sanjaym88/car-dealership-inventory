@@ -10,14 +10,12 @@ export interface AdminActions {
   onDelete: (vehicle: Vehicle) => void
 }
 
-export function VehicleCard({ vehicle, onPurchase, purchasing = false, admin, entranceDelay = 0 }: {
+export function VehicleCard({ vehicle, onPurchase, purchasing = false, admin }: {
   vehicle: Vehicle
   onPurchase: (vehicle: Vehicle) => void
   purchasing?: boolean
   /** Only passed for admins; regular users never see these controls. */
   admin?: AdminActions
-  /** Milliseconds before the card fades in, to stagger a grid. */
-  entranceDelay?: number
 }) {
   const headingId = useId()
   const inStock = vehicle.quantity > 0
@@ -25,12 +23,12 @@ export function VehicleCard({ vehicle, onPurchase, purchasing = false, admin, en
   const adminButton = 'rounded-full px-3 py-1.5 text-xs font-medium transition-colors duration-300 ease-glide'
 
   return (
-    <article aria-labelledby={headingId} style={{ animationDelay: `${entranceDelay}ms` }}
-      className="group flex animate-fade-up flex-col overflow-hidden rounded-2xl bg-white shadow-lg shadow-black/20 ring-1 ring-white/10 transition duration-500 ease-silk hover:-translate-y-1 hover:shadow-2xl hover:shadow-rose-900/30">
+    <article aria-labelledby={headingId}
+      className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-lg shadow-black/20 ring-1 ring-white/10 transition duration-500 ease-silk hover:-translate-y-1 hover:shadow-2xl hover:shadow-rose-900/30">
       <VehiclePhoto src={vehicle.image_url} name={name}
         className={`aspect-[16/10] ${inStock ? '' : 'opacity-60 grayscale'}`} />
 
-      <div className="flex grow flex-col p-5">
+      <div className="flex grow flex-col p-6">
         <div className="flex items-start justify-between gap-3">
           <h3 id={headingId} className="text-lg font-semibold text-slate-900">{name}</h3>
           <span className="shrink-0 rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-medium text-indigo-700">

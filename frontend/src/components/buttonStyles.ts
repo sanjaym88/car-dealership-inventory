@@ -14,9 +14,9 @@ const VARIANTS: Record<ButtonVariant, string> = {
   // dark pill: the primary action on light surfaces
   solid: 'bg-neutral-950 text-white hover:bg-neutral-800 disabled:bg-neutral-300 disabled:text-neutral-500',
   // light pill: the primary action on dark surfaces
-  light: 'bg-white text-neutral-950 hover:bg-neutral-200 disabled:bg-white/40',
+  light: 'bg-white text-neutral-950 hover:bg-neutral-200 disabled:bg-neutral-500',
   // quiet secondary action on dark surfaces
-  outline: 'bg-white/5 text-white ring-1 ring-inset ring-white/30 backdrop-blur hover:bg-white/15 hover:ring-white/60',
+  outline: 'bg-neutral-950 text-white ring-1 ring-inset ring-neutral-500 hover:bg-white hover:text-neutral-950 hover:ring-white',
   // text-like action on light surfaces
   ghost: 'text-neutral-700 hover:bg-neutral-100',
   success: 'bg-emerald-600 text-white hover:bg-emerald-500 disabled:bg-neutral-200 disabled:text-neutral-500',

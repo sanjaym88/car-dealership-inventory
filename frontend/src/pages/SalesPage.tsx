@@ -8,7 +8,7 @@ import { useOrders } from './useOrders'
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+    <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
       <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p>
       <p className="mt-1 text-2xl font-bold text-slate-900">{value}</p>
     </div>
@@ -22,16 +22,16 @@ export function SalesPage() {
     <PageShell title="Sales">
       <ErrorMessage message={error} />
       {orders === null && error === null && (
-        <p role="status" className="py-16 text-center text-slate-300">Loading sales…</p>
+        <p role="status" className="py-16 text-center text-neutral-200">Loading sales…</p>
       )}
       {orders?.length === 0 && (
-        <p className="rounded-2xl border-2 border-dashed border-white/15 bg-white/5 py-16 text-center text-slate-300 backdrop-blur">
+        <p className="rounded-2xl border border-neutral-800 bg-neutral-900 py-16 text-center text-neutral-200">
           No sales yet.
         </p>
       )}
       {orders && orders.length > 0 && (
         <>
-          <div className="mb-6 grid gap-4 sm:grid-cols-2">
+          <div className="mb-6 grid gap-6 sm:grid-cols-2">
             <Stat label="Orders" value={`${orders.length} ${orders.length === 1 ? 'order' : 'orders'}`} />
             <Stat label="Revenue" value={formatPrice(total)} />
           </div>

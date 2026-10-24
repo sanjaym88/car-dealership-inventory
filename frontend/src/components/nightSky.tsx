@@ -77,6 +77,6 @@ export function Stars() {
 type SkylineProps = { className: string; light?: string; fill?: string; testId?: string }
 
 /** Tall, distant buildings; drifts slowly. */
-export function FarSkyline({ className, fill = '#1b1a3d', light = '#fde68a55', testId }: SkylineProps) {
+export function FarSkyline({ className, fill = '#1c1c1f', light = '#fde68a55', testId }: SkylineProps) {
   return <Skyline list={FAR} fill={fill} light={light} className={className} testId={testId} />
 }

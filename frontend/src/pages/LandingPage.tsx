@@ -29,8 +29,8 @@ function GarageDoor() {
 }
 
 const navLink = ({ isActive }: { isActive: boolean }) =>
-  `whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold transition duration-300 sm:px-4 sm:py-2 ${
-    isActive ? 'bg-white text-slate-900' : 'text-white/85 hover:bg-white/10 hover:text-white'}`
+  `whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold transition-colors duration-300 ease-glide sm:px-4 sm:py-2 ${
+    isActive ? 'bg-white text-neutral-950' : 'text-white hover:bg-neutral-800'}`
 
 export function LandingPage({ panel }: { panel?: Panel }) {
   const { user } = useAuth()
@@ -42,13 +42,13 @@ export function LandingPage({ panel }: { panel?: Panel }) {
   const state = location.state
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#060816] text-white">
+    <div className="relative min-h-screen overflow-hidden bg-neutral-950 text-white">
       <header className="absolute inset-x-0 top-0 z-30">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/welcome" className="whitespace-nowrap text-lg font-bold tracking-tight">
-            <span aria-hidden="true">🚗 </span>AutoVault
+            AutoVault
           </Link>
-          <nav aria-label="Account" className="flex gap-1 rounded-full bg-slate-950/70 p-1 shadow-lg ring-1 ring-white/10 backdrop-blur">
+          <nav aria-label="Account" className="flex gap-1 rounded-full bg-neutral-950 p-1 ring-1 ring-neutral-700">
             <NavLink to="/login" state={state} className={navLink}>Log in</NavLink>
             <NavLink to="/register" state={state} className={navLink}>Sign up</NavLink>
           </nav>
@@ -60,14 +60,14 @@ export function LandingPage({ panel }: { panel?: Panel }) {
           open ? 'min-h-[42vh] lg:min-h-screen lg:basis-[56%]' : 'min-h-screen lg:basis-full'}`}>
           <HeroSlideshow slides={HERO_CLIPS} />
           <div className="relative z-10 mx-auto w-full max-w-3xl px-6 pb-32 pt-24 text-center lg:pb-40">
-            <h1 className="animate-fade-up bg-gradient-to-r from-white via-rose-100 to-amber-200 bg-clip-text text-5xl font-black tracking-tight text-transparent sm:text-7xl">
+            <h1 className="text-5xl font-black tracking-tight text-white sm:text-7xl">
               AutoVault
             </h1>
-            <p className="mt-3 animate-fade-up text-lg text-slate-200 [animation-delay:120ms] sm:text-2xl">
+            <p className="mt-4 text-lg text-white sm:text-2xl">
               Your next dream car.
             </p>
             {!open && (
-              <div className="mt-8 flex animate-fade-up flex-wrap justify-center gap-3 [animation-delay:240ms]">
+              <div className="mt-8 flex flex-wrap justify-center gap-4">
                 <Link to="/register" state={state}
                   className={buttonClass({ variant: 'light', size: 'lg' })}>
                   Get started
@@ -83,7 +83,7 @@ export function LandingPage({ panel }: { panel?: Panel }) {
 
         {open && (
           <section aria-label={panel === 'login' ? 'Log in' : 'Sign up'}
-            className="relative flex flex-1 animate-panel-in items-center justify-center bg-slate-50 text-slate-900 lg:min-h-screen">
+            className="relative flex flex-1 items-center justify-center bg-neutral-50 text-neutral-950 lg:min-h-screen">
             {/* key: switching forms closes the door and rolls it up again */}
             <div key={panel} className="relative w-full max-w-md overflow-hidden px-6 py-12 sm:px-10">
               <GarageDoor />

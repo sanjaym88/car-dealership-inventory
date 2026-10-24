@@ -49,8 +49,8 @@ export function SearchBar({ categories, onSearch, onClear }: {
 
   return (
     <form onSubmit={handleSubmit} role="search"
-      className="mb-6 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      className="mb-8 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <FormField label="Make" placeholder="e.g. Toyota" value={fields.make} onChange={update('make')} />
         <FormField label="Model" placeholder="e.g. Camry" value={fields.model} onChange={update('model')} />
         <div>
@@ -68,7 +68,7 @@ export function SearchBar({ categories, onSearch, onClear }: {
         <FormField label="Max price" type="number" min={0} step="any" placeholder="$"
           value={fields.maxPrice} onChange={update('maxPrice')} />
       </div>
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div className="mt-4 flex flex-wrap items-center gap-2">
         <button type="submit"
           className={buttonClass({ variant: 'solid', size: 'sm' })}>
           Search

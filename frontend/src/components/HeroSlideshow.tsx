@@ -81,7 +81,7 @@ export function HeroSlideshow({ slides }: { slides: Slide[] }) {
   }, [active, slides, restart])
 
   return (
-    <div data-testid="hero-slideshow" aria-hidden="true" className="absolute inset-0 overflow-hidden bg-[#060816]">
+    <div data-testid="hero-slideshow" aria-hidden="true" className="absolute inset-0 overflow-hidden bg-neutral-950">
       {slides.map((slide, i) => (
         <img key={slide.src} src={urls[i]} alt="" role="presentation" data-active={i === active}
           loading={i === 0 ? 'eager' : 'lazy'}
@@ -89,7 +89,7 @@ export function HeroSlideshow({ slides }: { slides: Slide[] }) {
             i === active ? 'opacity-100' : 'opacity-0'}`} />
       ))}
       {/* legibility: darken overall, deepen top and bottom, vignette the edges */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/35 to-[#060816]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-neutral-950" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.6)_100%)]" />
     </div>
   )

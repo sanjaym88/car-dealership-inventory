@@ -13,7 +13,7 @@ function OrderCard({ order }: { order: Order }) {
   const name = `${order.make} ${order.model}`
   return (
     <article aria-label={name}
-      className="flex flex-col gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 sm:flex-row">
+      className="flex flex-col gap-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:flex-row">
       <VehiclePhoto src={order.image_url} name={name} className="aspect-[16/10] rounded-xl sm:w-56 sm:shrink-0" />
       <div className="grow">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -48,18 +48,18 @@ export function OrdersPage() {
     <PageShell title="My orders" subtitle={subtitle}>
       <ErrorMessage message={error} />
       {orders === null && error === null && (
-        <p role="status" className="py-16 text-center text-slate-300">Loading orders…</p>
+        <p role="status" className="py-16 text-center text-neutral-200">Loading orders…</p>
       )}
       {orders?.length === 0 && (
-        <div className="rounded-2xl border-2 border-dashed border-white/15 bg-white/5 py-16 text-center text-slate-300 backdrop-blur">
+        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 py-16 text-center text-neutral-200">
           <p>You haven't bought anything yet.</p>
-          <Link to="/" className="mt-2 inline-block font-medium text-rose-300 transition hover:text-rose-200 hover:underline">
+          <Link to="/" className="mt-2 inline-block font-medium text-white underline underline-offset-4 transition-colors hover:text-neutral-300">
             Browse the inventory
           </Link>
         </div>
       )}
       {orders && orders.length > 0 && (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {orders.map((order) => <OrderCard key={order.id} order={order} />)}
         </div>
       )}

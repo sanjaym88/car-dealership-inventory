@@ -13,11 +13,11 @@ export function PageShell({ title, subtitle, actions, children }: {
     <div className="relative min-h-screen">
       <NightBackdrop />
       <Header />
-      <main className="mx-auto max-w-6xl animate-fade-up px-4 pb-24 pt-8">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+      <main className="mx-auto max-w-6xl px-6 pb-24 pt-10">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-6">
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-white">{title}</h2>
-            {subtitle && <p className="text-sm text-slate-300">{subtitle}</p>}
+            {subtitle && <p className="mt-1 text-sm text-neutral-300">{subtitle}</p>}
           </div>
           {actions}
         </div>

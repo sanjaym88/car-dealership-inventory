@@ -12,8 +12,8 @@ export function VehiclePhoto({ src, name, className = '' }: {
   if (!src || failed) {
     return (
       <div role="img" aria-label={`No photo of ${name}`}
-        className={`${frame} flex items-center justify-center text-4xl text-slate-300`}>
-        <span aria-hidden="true">🚗</span>
+        className={`${frame} flex items-center justify-center text-xs font-medium uppercase tracking-wider text-neutral-500`}>
+        <span aria-hidden="true">No photo</span>
       </div>
     )
   }

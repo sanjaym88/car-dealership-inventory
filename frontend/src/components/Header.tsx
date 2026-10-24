@@ -3,17 +3,17 @@ import { useAuth } from '../auth/useAuth'
 import { buttonClass } from './buttonStyles'
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
-  `rounded-full px-3 py-1.5 font-medium transition duration-300 ${
-    isActive ? 'bg-white/15 text-white' : 'text-slate-300 hover:bg-white/10 hover:text-white'}`
+  `rounded-full px-3 py-1.5 font-medium transition-colors duration-300 ease-glide ${
+    isActive ? 'bg-white text-neutral-950' : 'text-neutral-200 hover:bg-neutral-800 hover:text-white'}`
 
 export function Header() {
   const { user, logout } = useAuth()
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/60 text-white backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3">
+    <header className="sticky top-0 z-40 border-b border-neutral-800 bg-neutral-950 text-white">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-6 py-3">
         <div className="flex items-center gap-4">
           <p className="text-lg font-bold tracking-tight">
-            <span aria-hidden="true">🚗 </span>AutoVault
+            AutoVault
           </p>
           <nav aria-label="Main" className="flex gap-1 text-sm">
             <NavLink to="/" end className={linkClass}>Inventory</NavLink>
@@ -27,7 +27,7 @@ export function Header() {
               Admin
             </span>
           )}
-          <span className="hidden text-slate-300 md:inline">{user?.email}</span>
+          <span className="hidden text-neutral-300 md:inline">{user?.email}</span>
           <button type="button" onClick={logout}
             className={buttonClass({ variant: 'outline', size: 'sm' })}>
             Log out
