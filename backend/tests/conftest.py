@@ -78,3 +78,26 @@ def admin_headers(register_user, login_headers, db_session):
     db_session.get(User, created["id"]).is_admin = True
     db_session.commit()
     return login_headers("admin@example.com")
+
+
+SAMPLE_VEHICLE = {
+    "make": "Toyota",
+    "model": "Camry",
+    "category": "Sedan",
+    "price": 25000.0,
+    "quantity": 5,
+}
+
+
+@pytest.fixture
+def create_vehicle(client, user_headers):
+    """Factory: add a vehicle through the API (sample values overridable) and return its JSON."""
+
+    def _create(**overrides) -> dict:
+        response = client.post(
+            "/api/vehicles", json={**SAMPLE_VEHICLE, **overrides}, headers=user_headers
+        )
+        assert response.status_code == 201, response.text
+        return response.json()
+
+    return _create
