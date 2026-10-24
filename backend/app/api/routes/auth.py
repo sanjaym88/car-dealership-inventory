@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, unauthorized
 from app.core.database import get_db
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
@@ -33,11 +33,7 @@ def login(data: LoginRequest, service: AuthService = Depends(get_auth_service)):
     try:
         return Token(access_token=service.login(data.email, data.password))
     except InvalidCredentialsError:
-        raise HTTPException(
-            status.HTTP_401_UNAUTHORIZED,
-            "Invalid email or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise unauthorized("Invalid email or password")
 
 
 @router.get("/me", response_model=UserRead)

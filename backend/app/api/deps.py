@@ -15,7 +15,8 @@ from app.repositories.user_repository import UserRepository
 bearer_scheme = HTTPBearer(auto_error=False)
 
 
-def _unauthorized(detail: str) -> HTTPException:
+def unauthorized(detail: str) -> HTTPException:
+    """401 with the WWW-Authenticate header the HTTP spec expects for bearer auth."""
     return HTTPException(
         status.HTTP_401_UNAUTHORIZED, detail, headers={"WWW-Authenticate": "Bearer"}
     )
@@ -26,14 +27,14 @@ def get_current_user(
     db: Session = Depends(get_db),
 ) -> User:
     if credentials is None:
-        raise _unauthorized("Not authenticated")
+        raise unauthorized("Not authenticated")
     try:
         user_id = decode_access_token(credentials.credentials)
     except InvalidTokenError:
-        raise _unauthorized("Invalid or expired token")
+        raise unauthorized("Invalid or expired token")
     user = UserRepository(db).get_by_id(user_id)
     if user is None:
-        raise _unauthorized("Invalid or expired token")
+        raise unauthorized("Invalid or expired token")
     return user
 
 
