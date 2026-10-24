@@ -168,3 +168,44 @@ test('shows an error when the search fails', async () => {
 
   expect(await screen.findByRole('alert')).toHaveTextContent('min_price')
 })
+
+// --- purchase (F5) ---
+
+test('buying a vehicle lowers its stock on the card and confirms the purchase', async () => {
+  api.list.mockResolvedValue([camry])
+  api.purchase.mockResolvedValue({ ...camry, quantity: 4 })
+  renderDashboard()
+  const card = await screen.findByRole('article')
+
+  await userEvent.click(within(card).getByRole('button', { name: /purchase/i }))
+
+  expect(api.purchase).toHaveBeenCalledWith(camry.id)
+  expect(await within(card).findByText('4 in stock')).toBeInTheDocument()
+  expect(screen.getByRole('status')).toHaveTextContent('You bought a Toyota Camry')
+  expect(screen.getByText('1 models · 4 units in stock')).toBeInTheDocument()
+})
+
+test('buying the last unit disables the Purchase button', async () => {
+  api.list.mockResolvedValue([{ ...camry, quantity: 1 }])
+  api.purchase.mockResolvedValue({ ...camry, quantity: 0 })
+  renderDashboard()
+  const card = await screen.findByRole('article')
+
+  await userEvent.click(within(card).getByRole('button', { name: /purchase/i }))
+
+  expect(await within(card).findByText('Out of stock')).toBeInTheDocument()
+  expect(within(card).getByRole('button', { name: /purchase/i })).toBeDisabled()
+})
+
+test('a failed purchase shows the reason and marks the vehicle sold out', async () => {
+  // e.g. someone else bought the last one after this page loaded
+  api.list.mockResolvedValue([{ ...camry, quantity: 1 }])
+  api.purchase.mockRejectedValue(new ApiError(409, 'Vehicle is out of stock'))
+  renderDashboard()
+  const card = await screen.findByRole('article')
+
+  await userEvent.click(within(card).getByRole('button', { name: /purchase/i }))
+
+  expect(await screen.findByRole('alert')).toHaveTextContent('Vehicle is out of stock')
+  expect(within(card).getByRole('button', { name: /purchase/i })).toBeDisabled()
+})
