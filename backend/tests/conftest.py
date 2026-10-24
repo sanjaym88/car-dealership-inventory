@@ -48,3 +48,33 @@ def register_user(client):
         return response.json()
 
     return _register
+
+
+@pytest.fixture
+def login_headers(client):
+    """Factory: log in and return an Authorization header for that user."""
+
+    def _login(email: str = "alice@example.com", password: str = "secret123") -> dict:
+        response = client.post("/api/auth/login", json={"email": email, "password": password})
+        assert response.status_code == 200, response.text
+        return {"Authorization": f"Bearer {response.json()['access_token']}"}
+
+    return _login
+
+
+@pytest.fixture
+def user_headers(register_user, login_headers):
+    """Auth header for a regular (non-admin) user."""
+    register_user("user@example.com")
+    return login_headers("user@example.com")
+
+
+@pytest.fixture
+def admin_headers(register_user, login_headers, db_session):
+    """Auth header for an admin. Registration never grants admin, so promote directly in the DB."""
+    from app.models.user import User
+
+    created = register_user("admin@example.com")
+    db_session.get(User, created["id"]).is_admin = True
+    db_session.commit()
+    return login_headers("admin@example.com")
