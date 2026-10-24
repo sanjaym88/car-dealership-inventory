@@ -7,7 +7,7 @@ and search the inventory, and buy vehicles; admins add, edit, restock and delete
 
 - **Backend:** FastAPI REST API with JWT authentication and role-based access, backed by PostgreSQL.
 - **Frontend:** React + TypeScript single-page app styled with Tailwind CSS.
-- **Quality:** 167 automated tests (78 backend, 89 frontend) at ~99% coverage, run on every push by GitHub Actions.
+- **Quality:** 178 automated tests (86 backend, 92 frontend) at ~99% coverage, run on every push by GitHub Actions.
 
 ![Admin dashboard](docs/screenshots/03-dashboard-admin.jpg)
 
@@ -21,6 +21,7 @@ and search the inventory, and buy vehicles; admins add, edit, restock and delete
 - [Architecture](#architecture)
 - [API reference](#api-reference)
 - [Running locally](#running-locally)
+- [Deployment](#deployment)
 - [Running the tests](#running-the-tests)
 - [Test report](#test-report)
 - [Design decisions](#design-decisions)
@@ -153,6 +154,34 @@ npm run dev                            # http://localhost:5173 (proxies /api to 
 
 Open http://localhost:5173. Register a regular account, or log in as the admin you created.
 
+## Deployment
+
+**Live demo:** _TODO: add the Vercel URL once deployed_
+
+> The backend runs on Render's free plan and goes to sleep after 15 minutes without traffic. The first request
+> after that can take about a minute while it wakes up.
+
+```
+Browser ──▶ Vercel (React build) ──/api/*──▶ Render (FastAPI) ──▶ Neon (PostgreSQL)
+```
+
+| Part | Host | Config |
+|---|---|---|
+| Frontend | Vercel (root directory `frontend`) | [`frontend/vercel.json`](frontend/vercel.json) proxies `/api/*` to the backend and serves `index.html` for client routes |
+| Backend | Render free web service | [`render.yaml`](render.yaml) Blueprint: migrations run on start, health check `/api/health` |
+| Database | Neon free Postgres | Connection string goes in Render's `DATABASE_URL` (the `postgres://` scheme is converted automatically) |
+
+Because Vercel proxies `/api`, the browser only talks to one origin, so no CORS setup is needed. In production
+(`ENVIRONMENT=production`) the API refuses to start without a strong `JWT_SECRET`; Render generates one.
+
+To create the first admin on the hosted database, run the script locally against Neon:
+
+```bash
+cd backend
+set DATABASE_URL=<neon connection string>      # macOS/Linux: export DATABASE_URL=...
+python -m app.scripts.create_admin --email you@example.com
+```
+
 ## Running the tests
 
 ```bash
@@ -173,8 +202,8 @@ All tests pass; full output is in [`docs/test-report/`](docs/test-report/).
 
 | Suite | Tests | Result | Coverage |
 |---|---|---|---|
-| Backend (pytest, real PostgreSQL) | 78 | ✅ all passed | 99% of statements |
-| Frontend (Vitest + Testing Library) | 89 | ✅ all passed | 99.1% statements · 95.8% branches |
+| Backend (pytest, real PostgreSQL) | 86 | ✅ all passed | 99% of statements |
+| Frontend (Vitest + Testing Library) | 92 | ✅ all passed | 99.1% statements · 95.8% branches |
 
 What is covered:
 - **Auth:** registration rules, bcrypt hashing, login, identical errors for unknown email and wrong password,
