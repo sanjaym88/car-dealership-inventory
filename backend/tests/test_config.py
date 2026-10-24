@@ -7,6 +7,13 @@ from app.core.config import Settings
 STRONG_SECRET = "x" * 32
 
 
+@pytest.fixture(autouse=True)
+def isolated_environment(monkeypatch):
+    """Settings also read real environment variables (CI sets JWT_SECRET); start each test without them."""
+    for name in ("ENVIRONMENT", "DATABASE_URL", "JWT_SECRET"):
+        monkeypatch.delenv(name, raising=False)
+
+
 def make_settings(**values) -> Settings:
     # _env_file=None: ignore any local .env so the test only sees what it passes in.
     return Settings(_env_file=None, **values)
