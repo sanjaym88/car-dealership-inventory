@@ -1,13 +1,18 @@
-// Welcome page. The night-drive scene fills the screen; choosing Log in or Sign up slides the
+// Welcome page. Night-driving clips fill the screen; choosing Log in or Sign up slides the
 // scene aside and rolls a garage door up to reveal the form.
 import { Link, Navigate, NavLink, useLocation } from 'react-router'
 import { useAuth } from '../auth/useAuth'
-import { DriveScene } from '../components/DriveScene'
+import nightDrive1 from '../assets/hero/night-drive-1.gif'
+import nightDrive2 from '../assets/hero/night-drive-2.gif'
+import nightDrive3 from '../assets/hero/night-drive-3.gif'
+import { HeroSlideshow } from '../components/HeroSlideshow'
 import { LoginPage } from './LoginPage'
 import { RegisterPage } from './RegisterPage'
 import { buttonClass } from '../components/buttonStyles'
 
 export type Panel = 'login' | 'register'
+
+const HERO_CLIPS = [nightDrive1, nightDrive2, nightDrive3]
 
 function GarageDoor() {
   return (
@@ -48,7 +53,7 @@ export function LandingPage({ panel }: { panel?: Panel }) {
       <div className="flex min-h-screen flex-col lg:flex-row">
         <section className={`relative flex shrink-0 items-center transition-[flex-basis,min-height] duration-700 ease-silk ${
           open ? 'min-h-[42vh] lg:min-h-screen lg:basis-[56%]' : 'min-h-screen lg:basis-full'}`}>
-          <DriveScene />
+          <HeroSlideshow slides={HERO_CLIPS} />
           <div className="relative z-10 mx-auto w-full max-w-3xl px-6 pb-32 pt-24 text-center lg:pb-40">
             <h1 className="animate-fade-up bg-gradient-to-r from-white via-rose-100 to-amber-200 bg-clip-text text-5xl font-black tracking-tight text-transparent sm:text-7xl">
               AutoVault

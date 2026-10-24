@@ -6,39 +6,25 @@
   /* slow, symmetric ease used by buttons (in the spirit of rivian.com) */
   --ease-glide: cubic-bezier(0.83, 0, 0.17, 1);
 
-  --animate-spin-wheel: spin-wheel 0.7s linear infinite;
-  --animate-spin-wheel-fast: spin-wheel 0.25s linear infinite;
   --animate-road: road 0.5s linear infinite;
   --animate-skyline-far: skyline 90s linear infinite;
-  --animate-skyline-near: skyline 45s linear infinite;
-  --animate-car-bob: car-bob 0.9s ease-in-out infinite;
   --animate-twinkle: twinkle 3s ease-in-out infinite;
   --animate-garage-door: garage-door 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.2s forwards;
   --animate-panel-in: panel-in 0.7s var(--ease-silk) both;
   --animate-fade-up: fade-up 0.6s var(--ease-silk) both;
-  --animate-drive-off: drive-off 1.2s cubic-bezier(0.5, 0, 0.75, 0) infinite;
-  --animate-beam: beam 2.4s ease-in-out infinite;
+  --animate-ken-burns: ken-burns 24s ease-in-out infinite alternate;
 }
 
-@keyframes spin-wheel { to { transform: rotate(360deg); } }
 @keyframes road { to { background-position-x: -120px; } }
 @keyframes skyline { to { transform: translateX(-50%); } }
-@keyframes car-bob { 50% { transform: translateY(-2px); } }
 @keyframes twinkle { 50% { opacity: 0.2; } }
 @keyframes garage-door { to { transform: translateY(-101%); } }
 @keyframes panel-in { from { opacity: 0; transform: translateX(40px); } }
 @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } }
 @keyframes fade-in { from { opacity: 0; } }
-@keyframes drive-off {
-  0% { transform: translateX(0); }
-  60%, 100% { transform: translateX(140%); opacity: 0; }
-}
-@keyframes beam { 50% { opacity: 0.55; } }
+@keyframes ken-burns { from { transform: scale(1.04); } to { transform: scale(1.14) translateX(-1.5%); } }
 
 @layer base {
-  /* SVG parts (wheels) spin around their own centre. */
-  .spin-origin { transform-box: fill-box; transform-origin: center; }
-
   /* Every button eases on hover and gives a little when pressed. */
   button, a {
     transition-timing-function: var(--ease-silk);

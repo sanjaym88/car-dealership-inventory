@@ -38,7 +38,6 @@ function buildings(seed: number, maxHeight: number): Building[] {
 }
 
 const FAR = buildings(3, 150)
-const NEAR = buildings(11, 110)
 
 // Two copies side by side, scrolled by half their width, make a seamless loop.
 function Skyline({ list, fill, light, className, testId }: {
@@ -80,9 +79,4 @@ type SkylineProps = { className: string; light?: string; fill?: string; testId?:
 /** Tall, distant buildings; drifts slowly. */
 export function FarSkyline({ className, fill = '#1b1a3d', light = '#fde68a55', testId }: SkylineProps) {
   return <Skyline list={FAR} fill={fill} light={light} className={className} testId={testId} />
-}
-
-/** Lower, closer buildings; drifts faster for parallax. */
-export function NearSkyline({ className, fill = '#0f0e24', light = '#fbbf2499', testId }: SkylineProps) {
-  return <Skyline list={NEAR} fill={fill} light={light} className={className} testId={testId} />
 }

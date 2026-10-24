@@ -4,7 +4,7 @@ import { HeroSlideshow } from './HeroSlideshow'
 const SLIDES = ['/a.gif', '/b.gif', '/c.gif']
 
 function active() {
-  return screen.getAllByRole('presentation').findIndex((img) => img.dataset.active === 'true')
+  return screen.getAllByRole('presentation', { hidden: true }).findIndex((img) => img.dataset.active === 'true')
 }
 
 beforeEach(() => vi.useFakeTimers())
@@ -14,7 +14,7 @@ test('is decorative, so screen readers skip it', () => {
   render(<HeroSlideshow slides={SLIDES} />)
 
   expect(screen.getByTestId('hero-slideshow')).toHaveAttribute('aria-hidden', 'true')
-  expect(screen.getAllByRole('presentation')).toHaveLength(3)
+  expect(screen.getAllByRole('presentation', { hidden: true })).toHaveLength(3)
 })
 
 test('starts on the first clip and crossfades to the next on a timer, looping round', () => {
