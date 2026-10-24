@@ -8,7 +8,7 @@ manage the inventory and see every sale.
 
 - **Backend:** FastAPI REST API with JWT authentication and role-based access, backed by PostgreSQL.
 - **Frontend:** React + TypeScript single-page app styled with Tailwind CSS.
-- **Quality:** 271 automated tests (130 backend, 141 frontend) at ~99% coverage, plus linting, run on every push by GitHub Actions.
+- **Quality:** 277 automated tests (130 backend, 147 frontend) at ~99% coverage, plus linting, run on every push by GitHub Actions.
 - **One command to try it:** `docker compose --profile app up --build`, then open http://localhost:8080.
 
 ![Landing page](docs/screenshots/01-landing.jpg)
@@ -35,11 +35,12 @@ manage the inventory and see every sale.
 ## Features
 
 **Look and feel**
-- Animated landing page: a night drive past a city skyline, drawn in SVG/CSS (no video or GIF files).
-- *Log in* and *Sign up* slide the scene aside and roll a garage door up to reveal the form. The submit
-  button is a car whose wheels spin on hover and which drives off while you are being logged in.
-- The same night sky sits behind every page, with smooth button, card and page transitions. Motion is turned
-  off for anyone whose system asks for reduced motion.
+- Landing page: night-driving clips crossfade behind the headline, with a slow zoom.
+- *Log in* and *Sign up* slide the clips aside and roll a garage door up to reveal the form.
+- Calm, pill-shaped buttons with a slow, even ease, inspired by rivian.com, used consistently across the app.
+- A night sky with a drifting skyline sits behind every app page, with smooth card and page transitions.
+- Dialogs (checkout, admin forms) open where you are on the page, and the page behind stays still.
+- Motion is turned off for anyone whose system asks for reduced motion.
 
 **Everyone (logged in)**
 - Register and log in; the session survives a page refresh and expired tokens are discarded cleanly.
@@ -76,7 +77,7 @@ manage the inventory and see every sale.
 |---|---|
 | ![Checkout](docs/screenshots/04-checkout.jpg) | ![My orders](docs/screenshots/05-my-orders.jpg) |
 
-| Sales (admin) | Phone |
+| Sales (admin) | Phone (landing) |
 |---|---|
 | ![Sales](docs/screenshots/06-sales.jpg) | <img src="docs/screenshots/07-mobile.jpg" alt="Mobile view" width="260"> |
 
@@ -249,7 +250,7 @@ All tests pass; full output is in [`docs/test-report/`](docs/test-report/).
 | Suite | Tests | Result | Coverage |
 |---|---|---|---|
 | Backend (pytest, real PostgreSQL) | 130 | ✅ all passed | 99% of statements |
-| Frontend (Vitest + Testing Library) | 141 | ✅ all passed | 99.0% statements · 95.4% branches |
+| Frontend (Vitest + Testing Library) | 147 | ✅ all passed | 99.0% statements · 95.6% branches |
 
 What is covered:
 - **Auth:** registration rules, bcrypt hashing, login, identical errors for unknown email and wrong password,
@@ -301,6 +302,10 @@ Raw output: [backend.txt](docs/test-report/backend.txt) · [frontend.txt](docs/t
 mail servers. If DNS can't be reached the address is allowed, so an outage never blocks sign-ups. It still can't
 prove the mailbox exists or belongs to the user; that needs an emailed confirmation link and an
 email-sending service.
+
+**Landing-page clips:** the three night-driving GIFs in `frontend/src/assets/hero/` were supplied for this
+demo and belong to their original creators (one carries an *Art of the Automobile* watermark). Replace them
+before any public or commercial use.
 
 **Photo credits:** car photos are the lead images of the models' Wikipedia articles, hosted on
 [Wikimedia Commons](https://commons.wikimedia.org/) under their respective free licences (mostly CC BY-SA).

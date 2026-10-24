@@ -2,135 +2,138 @@
  RUN  v5.0.5 C:/Users/vatsala/OneDrive/Desktop/car/frontend
       Coverage enabled with v8
 
- ✓ src/components/VehicleForm.test.tsx > submits the entered vehicle with numeric price and quantity 1828ms
- ✓ src/components/VehicleForm.test.tsx > starts with the current values when editing 313ms
- ✓ src/pages/DashboardPage.test.tsx > shows a loading indicator, then one card per vehicle 918ms
- ✓ src/components/VehicleForm.test.tsx > rejects invalid input { make: '' } with "Make is required" without submitting 127ms
- ✓ src/pages/DashboardAdmin.test.tsx > regular users see no admin controls 1012ms
- ✓ src/components/VehicleForm.test.tsx > rejects invalid input { model: '   ' } with "Model is required" without submitting 250ms
- ✓ src/pages/DashboardPage.test.tsx > shows category, formatted price and stock on each card 402ms
- ✓ src/components/VehicleForm.test.tsx > rejects invalid input { category: '' } with "Category is required" without submitting 150ms
- ✓ src/components/VehicleForm.test.tsx > rejects invalid input { price: '0' } with "Price must be greater than 0" without submitting 195ms
- ✓ src/pages/DashboardPage.test.tsx > marks sold-out vehicles as out of stock 351ms
- ✓ src/components/VehicleForm.test.tsx > rejects invalid input { price: '' } with "Price must be greater than 0" without submitting 119ms
- ✓ src/pages/DashboardPage.test.tsx > shows a friendly message when the inventory is empty 299ms
- ✓ src/components/VehicleForm.test.tsx > rejects invalid input { quantity: '-1' } with "Quantity must be a whole number of 0 or more" without submitting 182ms
- ✓ src/components/VehicleForm.test.tsx > rejects invalid input { quantity: '1.5' } with "Quantity must be a whole number of 0 or more" without submitting 198ms
- ✓ src/pages/DashboardPage.test.tsx > shows an error when the vehicles cannot be loaded 249ms
- ✓ src/components/VehicleForm.test.tsx > shows the server error and keeps the form open 112ms
- ✓ src/components/VehicleForm.test.tsx > cancel closes without submitting 66ms
- ✓ src/pages/DashboardAdmin.test.tsx > admin adds a vehicle and it appears in the inventory 1487ms
- ✓ src/pages/DashboardPage.test.tsx > shows a summary of models and units in stock 276ms
- ✓ src/pages/DashboardPage.test.tsx > header shows the user and logs out 303ms
- ✓ src/components/VehicleForm.test.tsx > submits an optional photo URL 620ms
- ✓ src/components/VehicleForm.test.tsx > starts with the current photo URL when editing 26ms
- ✓ src/components/VehicleForm.test.tsx > rejects the photo URL "not a url" 442ms
- ✓ src/pages/DashboardPage.test.tsx > header shows an Admin badge for admins 441ms
- ✓ src/pages/DashboardAdmin.test.tsx > admin edits a vehicle and the card updates 922ms
- ✓ src/components/VehicleForm.test.tsx > rejects the photo URL "ftp://example.com/car.jpg" 667ms
- ✓ src/pages/DashboardAdmin.test.tsx > admin restocks a vehicle and the stock updates 771ms
- ✓ src/pages/DashboardPage.test.tsx > searching shows only the matching vehicles 981ms
- ✓ src/components/VehicleForm.test.tsx > rejects the photo URL "javascript:alert(1)" 565ms
- ✓ src/pages/DashboardPage.test.tsx > offers every category from the inventory in the filter 441ms
- ✓ src/pages/DashboardAdmin.test.tsx > admin deletes a vehicle after confirming 851ms
- ✓ src/pages/DashboardPage.test.tsx > says so when nothing matches the search 1441ms
- ✓ src/pages/DashboardAdmin.test.tsx > cancelling the delete keeps the vehicle 1175ms
- ✓ src/pages/DashboardAdmin.test.tsx > a failed delete shows the reason in the dialog 477ms
- ✓ src/pages/DashboardPage.test.tsx > clearing the search shows the full inventory again 952ms
- ✓ src/pages/DashboardAdmin.test.tsx > Escape closes an open dialog 658ms
- ✓ src/pages/DashboardPage.test.tsx > shows an error when the search fails 526ms
- ✓ src/components/RestockForm.test.tsx > submits the number of units to add 649ms
- ✓ src/components/RestockForm.test.tsx > rejects "0" without submitting 114ms
- ✓ src/pages/DashboardPage.test.tsx > Purchase opens checkout; confirming buys the car and updates its stock 1849ms
- ✓ src/components/RestockForm.test.tsx > rejects "-2" without submitting 163ms
- ✓ src/components/RestockForm.test.tsx > rejects "1.5" without submitting 132ms
- ✓ src/components/RestockForm.test.tsx > rejects "" without submitting 71ms
- ✓ src/components/RestockForm.test.tsx > cancel closes without submitting 72ms
- ✓ src/pages/DashboardPage.test.tsx > cancelling checkout buys nothing 550ms
- ✓ src/pages/DashboardPage.test.tsx > buying the last unit disables the Purchase button 863ms
- ✓ src/pages/DashboardPage.test.tsx > a failed purchase shows the reason in checkout and marks the vehicle sold out 736ms
- ✓ src/pages/RegisterPage.test.tsx > registers and opens the dashboard 1282ms
- ✓ src/pages/RegisterPage.test.tsx > rejects mismatched passwords without calling the server 1474ms
- ✓ src/pages/RegisterPage.test.tsx > rejects passwords shorter than 8 characters without calling the server 1239ms
- ✓ src/App.test.tsx > logged-out visitors to the dashboard land on the welcome page 804ms
- ✓ src/App.test.tsx > the login page opens the login form over the welcome scene 1062ms
- ✓ src/App.test.tsx > the register page is reachable 380ms
- ✓ src/App.test.tsx > unknown paths fall back to the dashboard (and so to the welcome page) 248ms
- ✓ src/pages/LoginPage.test.tsx > logs in with the entered credentials and opens the dashboard 1154ms
- ✓ src/pages/RegisterPage.test.tsx > shows the server error, e.g. an email that is already taken 970ms
- ✓ src/App.test.tsx > my orders needs a login 250ms
- ✓ src/pages/RegisterPage.test.tsx > links back to the login page 110ms
- ✓ src/pages/LoginPage.test.tsx > shows the server error and stays on the page when login fails 784ms
- ✓ src/pages/LoginPage.test.tsx > disables the button while logging in 732ms
- ✓ src/pages/LoginPage.test.tsx > links to the registration page 95ms
+ ✓ src/pages/DashboardPage.test.tsx > shows a loading indicator, then one card per vehicle 782ms
+ ✓ src/components/VehicleForm.test.tsx > submits the entered vehicle with numeric price and quantity 2202ms
+ ✓ src/pages/DashboardAdmin.test.tsx > regular users see no admin controls 887ms
+ ✓ src/pages/DashboardPage.test.tsx > shows category, formatted price and stock on each card 295ms
+ ✓ src/components/VehicleForm.test.tsx > starts with the current values when editing 293ms
+ ✓ src/components/VehicleForm.test.tsx > rejects invalid input { make: '' } with "Make is required" without submitting 120ms
+ ✓ src/pages/DashboardPage.test.tsx > marks sold-out vehicles as out of stock 223ms
+ ✓ src/components/VehicleForm.test.tsx > rejects invalid input { model: '   ' } with "Model is required" without submitting 184ms
+ ✓ src/components/VehicleForm.test.tsx > rejects invalid input { category: '' } with "Category is required" without submitting 71ms
+ ✓ src/pages/DashboardPage.test.tsx > shows a friendly message when the inventory is empty 266ms
+ ✓ src/components/VehicleForm.test.tsx > rejects invalid input { price: '0' } with "Price must be greater than 0" without submitting 172ms
+ ✓ src/components/VehicleForm.test.tsx > rejects invalid input { price: '' } with "Price must be greater than 0" without submitting 118ms
+ ✓ src/pages/DashboardPage.test.tsx > shows an error when the vehicles cannot be loaded 270ms
+ ✓ src/components/VehicleForm.test.tsx > rejects invalid input { quantity: '-1' } with "Quantity must be a whole number of 0 or more" without submitting 151ms
+ ✓ src/components/VehicleForm.test.tsx > rejects invalid input { quantity: '1.5' } with "Quantity must be a whole number of 0 or more" without submitting 236ms
+ ✓ src/pages/DashboardPage.test.tsx > shows a summary of models and units in stock 367ms
+ ✓ src/components/VehicleForm.test.tsx > shows the server error and keeps the form open 111ms
+ ✓ src/components/VehicleForm.test.tsx > cancel closes without submitting 103ms
+ ✓ src/pages/DashboardAdmin.test.tsx > admin adds a vehicle and it appears in the inventory 1489ms
+ ✓ src/pages/DashboardPage.test.tsx > header shows the user and logs out 397ms
+ ✓ src/pages/DashboardPage.test.tsx > header shows an Admin badge for admins 307ms
+ ✓ src/components/VehicleForm.test.tsx > submits an optional photo URL 631ms
+ ✓ src/components/VehicleForm.test.tsx > starts with the current photo URL when editing 10ms
+ ✓ src/pages/DashboardAdmin.test.tsx > admin edits a vehicle and the card updates 797ms
+ ✓ src/components/VehicleForm.test.tsx > rejects the photo URL "not a url" 281ms
+ ✓ src/pages/DashboardPage.test.tsx > searching shows only the matching vehicles 662ms
+ ✓ src/pages/DashboardAdmin.test.tsx > admin restocks a vehicle and the stock updates 532ms
+ ✓ src/pages/DashboardPage.test.tsx > offers every category from the inventory in the filter 273ms
+ ✓ src/components/VehicleForm.test.tsx > rejects the photo URL "ftp://example.com/car.jpg" 530ms
+ ✓ src/pages/DashboardAdmin.test.tsx > admin deletes a vehicle after confirming 483ms
+ ✓ src/components/VehicleForm.test.tsx > rejects the photo URL "javascript:alert(1)" 485ms
+ ✓ src/pages/DashboardPage.test.tsx > says so when nothing matches the search 562ms
+ ✓ src/pages/DashboardAdmin.test.tsx > cancelling the delete keeps the vehicle 576ms
+ ✓ src/pages/DashboardPage.test.tsx > clearing the search shows the full inventory again 780ms
+ ✓ src/pages/DashboardAdmin.test.tsx > a failed delete shows the reason in the dialog 458ms
+ ✓ src/pages/DashboardAdmin.test.tsx > Escape closes an open dialog 483ms
+ ✓ src/pages/DashboardPage.test.tsx > shows an error when the search fails 382ms
+ ✓ src/pages/DashboardPage.test.tsx > Purchase opens checkout; confirming buys the car and updates its stock 855ms
+ ✓ src/pages/DashboardPage.test.tsx > cancelling checkout buys nothing 570ms
+ ✓ src/pages/DashboardPage.test.tsx > buying the last unit disables the Purchase button 939ms
+ ✓ src/pages/SalesPage.test.tsx > lists every sale with order number, date, buyer, vehicle and total 669ms
+ ✓ src/pages/DashboardPage.test.tsx > a failed purchase shows the reason in checkout and marks the vehicle sold out 616ms
+ ✓ src/pages/SalesPage.test.tsx > summarises orders and revenue 279ms
+ ✓ src/pages/SalesPage.test.tsx > says so when nothing has been sold yet 272ms
+ ✓ src/pages/SalesPage.test.tsx > shows an error when sales cannot be loaded 274ms
+ ✓ src/pages/RegisterPage.test.tsx > registers and opens the dashboard 1192ms
+ ✓ src/pages/RegisterPage.test.tsx > rejects mismatched passwords without calling the server 826ms
+ ✓ src/pages/RegisterPage.test.tsx > rejects passwords shorter than 8 characters without calling the server 729ms
+ ✓ src/components/SearchBar.test.tsx > submits only the filters that were filled in, with prices as numbers 853ms
+ ✓ src/components/SearchBar.test.tsx > trims whitespace and ignores blank text fields 407ms
+ ✓ src/components/SearchBar.test.tsx > lists the known categories plus an "all" option 28ms
+ ✓ src/pages/RegisterPage.test.tsx > shows the server error, e.g. an email that is already taken 811ms
+ ✓ src/pages/RegisterPage.test.tsx > links back to the login page 71ms
+ ✓ src/pages/OrdersPage.test.tsx > lists my orders with date, receipt and total 745ms
+ ✓ src/components/SearchBar.test.tsx > rejects a min price above the max price without searching 391ms
+ ✓ src/pages/OrdersPage.test.tsx > shows a summary of what I have spent 259ms
+ ✓ src/components/SearchBar.test.tsx > clear empties every field and notifies the parent 348ms
+ ✓ src/pages/OrdersPage.test.tsx > invites me to browse when I have no orders 296ms
+ ✓ src/pages/OrdersPage.test.tsx > shows an error when orders cannot be loaded 188ms
+ ✓ src/components/CheckoutForm.test.tsx > waits for the options to load 235ms
+ ✓ src/components/CheckoutForm.test.tsx > starts with the free defaults, so the total is the base price 319ms
+ ✓ src/pages/LoginPage.test.tsx > logs in with the entered credentials and opens the dashboard 1046ms
+ ✓ src/components/RestockForm.test.tsx > submits the number of units to add 517ms
+ ✓ src/components/RestockForm.test.tsx > rejects "0" without submitting 135ms
+ ✓ src/components/RestockForm.test.tsx > rejects "-2" without submitting 148ms
+ ✓ src/components/CheckoutForm.test.tsx > the total updates as options are chosen 457ms
+ ✓ src/components/CheckoutForm.test.tsx > shows option prices next to each choice 89ms
+ ✓ src/components/RestockForm.test.tsx > rejects "1.5" without submitting 205ms
+ ✓ src/pages/LoginPage.test.tsx > shows the server error and stays on the page when login fails 664ms
+ ✓ src/components/RestockForm.test.tsx > rejects "" without submitting 90ms
+ ✓ src/components/RestockForm.test.tsx > cancel closes without submitting 51ms
+ ✓ src/components/CheckoutForm.test.tsx > confirming sends only the chosen option codes 391ms
+ ✓ src/components/CheckoutForm.test.tsx > after confirming, shows the order number and the receipt from the server 168ms
+ ✓ src/components/CheckoutForm.test.tsx > shows the server error and stays on the form 96ms
+ ✓ src/components/CheckoutForm.test.tsx > cancel closes without buying 88ms
+ ✓ src/pages/LoginPage.test.tsx > disables the button while logging in 599ms
+ ✓ src/pages/LoginPage.test.tsx > links to the registration page 52ms
  ✓ src/pages/LoginPage.test.tsx > sends already logged-in users to the dashboard 7ms
- ✓ src/pages/SalesPage.test.tsx > lists every sale with order number, date, buyer, vehicle and total 2593ms
- ✓ src/pages/OrdersPage.test.tsx > lists my orders with date, receipt and total 2907ms
- ✓ src/pages/SalesPage.test.tsx > summarises orders and revenue 606ms
- ✓ src/pages/OrdersPage.test.tsx > shows a summary of what I have spent 387ms
- ✓ src/pages/SalesPage.test.tsx > says so when nothing has been sold yet 330ms
- ✓ src/pages/SalesPage.test.tsx > shows an error when sales cannot be loaded 308ms
- ✓ src/pages/OrdersPage.test.tsx > invites me to browse when I have no orders 437ms
- ✓ src/pages/OrdersPage.test.tsx > shows an error when orders cannot be loaded 470ms
- ✓ src/pages/LandingPage.test.tsx > greets visitors with the brand, tagline and animated scene 2453ms
- ✓ src/pages/LandingPage.test.tsx > the top bar offers log in and sign up 841ms
- ✓ src/pages/LandingPage.test.tsx > sign up opens the registration form 515ms
- ✓ src/pages/LandingPage.test.tsx > the call to action leads to sign up 250ms
- ✓ src/pages/LandingPage.test.tsx > the form is revealed behind a garage door 298ms
- ✓ src/pages/LandingPage.test.tsx > logged-in visitors go straight to the inventory 11ms
- ✓ src/components/CheckoutForm.test.tsx > waits for the options to load 339ms
- ✓ src/components/SearchBar.test.tsx > submits only the filters that were filled in, with prices as numbers 987ms
- ✓ src/components/CheckoutForm.test.tsx > starts with the free defaults, so the total is the base price 321ms
- ✓ src/components/SearchBar.test.tsx > trims whitespace and ignores blank text fields 728ms
- ✓ src/components/SearchBar.test.tsx > lists the known categories plus an "all" option 103ms
- ✓ src/components/SearchBar.test.tsx > rejects a min price above the max price without searching 1226ms
- ✓ src/components/CheckoutForm.test.tsx > the total updates as options are chosen 1996ms
- ✓ src/components/CheckoutForm.test.tsx > shows option prices next to each choice 295ms
- ✓ src/components/SearchBar.test.tsx > clear empties every field and notifies the parent 687ms
- ✓ src/components/CheckoutForm.test.tsx > confirming sends only the chosen option codes 702ms
- ✓ src/components/CheckoutForm.test.tsx > after confirming, shows the order number and the receipt from the server 207ms
- ✓ src/components/CheckoutForm.test.tsx > shows the server error and stays on the form 180ms
- ✓ src/components/CheckoutForm.test.tsx > cancel closes without buying 107ms
- ✓ src/components/VehicleCard.test.tsx > the Purchase button buys this vehicle 695ms
- ✓ src/components/VehicleCard.test.tsx > the Purchase button is disabled when the vehicle is out of stock 63ms
- ✓ src/components/VehicleCard.test.tsx > the Purchase button is disabled and relabelled while a purchase is in flight 49ms
- ✓ src/components/VehicleCard.test.tsx > shows the vehicle photo, described by make and model 70ms
- ✓ src/components/VehicleCard.test.tsx > shows a placeholder when the vehicle has no photo 40ms
- ✓ src/components/VehicleCard.test.tsx > falls back to the placeholder when the photo fails to load 83ms
- ✓ src/auth/AuthContext.test.tsx > starts logged out when no token is stored 34ms
- ✓ src/auth/AuthContext.test.tsx > restores the session from a stored token 153ms
- ✓ src/auth/AuthContext.test.tsx > drops a stored token the server rejects 110ms
- ✓ src/auth/AuthContext.test.tsx > login stores the token and loads the user 52ms
- ✓ src/auth/AuthContext.test.tsx > failed login leaves the user logged out and rethrows 44ms
- ✓ src/auth/AuthContext.test.tsx > register creates the account and then logs in 29ms
- ✓ src/auth/AuthContext.test.tsx > logout clears the token and the user 89ms
+ ✓ src/pages/LandingPage.test.tsx > greets visitors with the brand, tagline and driving clips 364ms
+ ✓ src/pages/LandingPage.test.tsx > the top bar offers log in and sign up 163ms
+ ✓ src/pages/LandingPage.test.tsx > sign up opens the registration form 128ms
+ ✓ src/pages/LandingPage.test.tsx > the call to action leads to sign up 67ms
+ ✓ src/pages/LandingPage.test.tsx > the form is revealed behind a garage door 93ms
+ ✓ src/pages/LandingPage.test.tsx > logged-in visitors go straight to the inventory 8ms
+ ✓ src/components/VehicleCard.test.tsx > the Purchase button buys this vehicle 631ms
+ ✓ src/components/VehicleCard.test.tsx > the Purchase button is disabled when the vehicle is out of stock 28ms
+ ✓ src/components/VehicleCard.test.tsx > the Purchase button is disabled and relabelled while a purchase is in flight 24ms
+ ✓ src/components/VehicleCard.test.tsx > shows the vehicle photo, described by make and model 28ms
+ ✓ src/components/VehicleCard.test.tsx > shows a placeholder when the vehicle has no photo 14ms
+ ✓ src/components/PageShell.test.tsx > shows the title, subtitle and content under the header 709ms
+ ✓ src/components/VehicleCard.test.tsx > falls back to the placeholder when the photo fails to load 52ms
+ ✓ src/components/PageShell.test.tsx > sits on the same night-sky backdrop as the landing page, hidden from screen readers 179ms
+ ✓ src/components/SubmitButton.test.tsx > is a full-width submit pill named by its label 383ms
+ ✓ src/components/SubmitButton.test.tsx > while pending it is disabled, relabelled and marked busy 19ms
+ ✓ src/components/Modal.test.tsx > renders at the top of the document, outside the page, so it opens where the user is 353ms
+ ✓ src/components/Modal.test.tsx > stops the page scrolling behind it, and restores scrolling when closed 5ms
+ ✓ src/components/Modal.test.tsx > closes on Escape 39ms
+ ✓ src/App.test.tsx > logged-out visitors to the dashboard land on the welcome page 134ms
+ ✓ src/App.test.tsx > the login page opens the login form over the welcome scene 358ms
+ ✓ src/App.test.tsx > the register page is reachable 45ms
+ ✓ src/App.test.tsx > unknown paths fall back to the dashboard (and so to the welcome page) 15ms
+ ✓ src/App.test.tsx > my orders needs a login 22ms
+ ✓ src/components/HeroSlideshow.test.tsx > is decorative, so screen readers skip it 95ms
+ ✓ src/components/HeroSlideshow.test.tsx > starts on the first clip and crossfades to the next on a timer, looping round 23ms
+ ✓ src/components/HeroSlideshow.test.tsx > holds still for people who prefer reduced motion 6ms
+ ✓ src/auth/AuthContext.test.tsx > starts logged out when no token is stored 41ms
+ ✓ src/auth/AuthContext.test.tsx > restores the session from a stored token 68ms
+ ✓ src/auth/AuthContext.test.tsx > drops a stored token the server rejects 79ms
+ ✓ src/auth/AuthContext.test.tsx > login stores the token and loads the user 5ms
+ ✓ src/auth/AuthContext.test.tsx > failed login leaves the user logged out and rethrows 21ms
+ ✓ src/auth/AuthContext.test.tsx > register creates the account and then logs in 17ms
+ ✓ src/auth/AuthContext.test.tsx > logout clears the token and the user 74ms
  ✓ src/auth/AuthContext.test.tsx > useAuth outside AuthProvider throws a helpful error 10ms
- ✓ src/components/PageShell.test.tsx > shows the title, subtitle and content under the header 1979ms
- ✓ src/components/PageShell.test.tsx > sits on the same night-sky backdrop as the landing page, hidden from screen readers 191ms
- ✓ src/components/DriveScene.test.tsx > is decorative, so screen readers skip it 328ms
- ✓ src/components/DriveScene.test.tsx > has a road, a skyline and a car with spinning wheels 192ms
- ✓ src/components/CarButton.test.tsx > is a submit button named by its label 717ms
- ✓ src/components/CarButton.test.tsx > draws a car with two wheels 24ms
- ✓ src/components/CarButton.test.tsx > while pending it is disabled, relabelled and marked as driving 69ms
- ✓ src/components/Header.test.tsx > links to the inventory and my orders 640ms
- ✓ src/components/Header.test.tsx > only admins get the Sales link 26ms
- ✓ src/components/Header.test.tsx > admins see the Sales link 25ms
- ✓ src/components/Header.test.tsx > marks the current page 49ms
- ✓ src/auth/ProtectedRoute.test.tsx > redirects anonymous visitors to the welcome page 333ms
- ✓ src/auth/ProtectedRoute.test.tsx > shows the page to logged-in users 17ms
- ✓ src/auth/ProtectedRoute.test.tsx > waits while the session is being restored instead of redirecting 513ms
- ✓ src/api/client.test.ts > sends a JSON body and returns the parsed response 13ms
- ✓ src/api/client.test.ts > attaches the stored token as a bearer header 2ms
+ ✓ src/components/Header.test.tsx > links to the inventory and my orders 508ms
+ ✓ src/components/Header.test.tsx > only admins get the Sales link 22ms
+ ✓ src/components/Header.test.tsx > admins see the Sales link 53ms
+ ✓ src/components/Header.test.tsx > marks the current page 58ms
+ ✓ src/auth/ProtectedRoute.test.tsx > redirects anonymous visitors to the welcome page 68ms
+ ✓ src/auth/ProtectedRoute.test.tsx > shows the page to logged-in users 11ms
+ ✓ src/auth/ProtectedRoute.test.tsx > waits while the session is being restored instead of redirecting 272ms
+ ✓ src/auth/AdminRoute.test.tsx > admins can open admin pages 76ms
+ ✓ src/auth/AdminRoute.test.tsx > regular users are sent back to the inventory 24ms
+ ✓ src/api/client.test.ts > sends a JSON body and returns the parsed response 17ms
+ ✓ src/api/client.test.ts > attaches the stored token as a bearer header 1ms
  ✓ src/api/client.test.ts > sends no Authorization header when logged out 1ms
  ✓ src/api/client.test.ts > throws ApiError with status and server message on failure 1ms
  ✓ src/api/client.test.ts > turns FastAPI validation errors into a readable message 1ms
  ✓ src/api/client.test.ts > returns undefined for 204 No Content 2ms
- ✓ src/auth/AdminRoute.test.tsx > admins can open admin pages 112ms
- ✓ src/auth/AdminRoute.test.tsx > regular users are sent back to the inventory 24ms
  ✓ vercel.config.test.ts > forwards /api requests to the backend over https, keeping the /api prefix 4ms
  ✓ vercel.config.test.ts > serves index.html for every other path so client-side routes survive a refresh 1ms
  ✓ vercel.config.test.ts > the API rule comes before the catch-all, or API calls would get index.html 0ms
- ✓ src/api/endpoints.test.ts > authApi > register posts credentials 5ms
+ ✓ src/api/endpoints.test.ts > authApi > register posts credentials 6ms
  ✓ src/api/endpoints.test.ts > authApi > login posts credentials 0ms
  ✓ src/api/endpoints.test.ts > authApi > me fetches the current user 0ms
  ✓ src/api/endpoints.test.ts > vehiclesApi > list 0ms
@@ -140,16 +143,19 @@
  ✓ src/api/endpoints.test.ts > vehiclesApi > remove 0ms
  ✓ src/api/endpoints.test.ts > vehiclesApi > purchase sends the checkout selection 0ms
  ✓ src/api/endpoints.test.ts > vehiclesApi > restock 0ms
- ✓ src/api/endpoints.test.ts > checkoutApi > options 1ms
- ✓ src/api/endpoints.test.ts > ordersApi > mine 1ms
+ ✓ src/api/endpoints.test.ts > checkoutApi > options 0ms
+ ✓ src/api/endpoints.test.ts > ordersApi > mine 0ms
  ✓ src/api/endpoints.test.ts > ordersApi > all (admin) 0ms
+ ✓ src/components/buttonStyles.test.ts > every button is a pill with the same smooth easing 5ms
+ ✓ src/components/buttonStyles.test.ts > variants look different from each other 0ms
+ ✓ src/components/buttonStyles.test.ts > sizes set the height, and block stretches to full width 1ms
 
- Test Files  23 passed (23)
-      Tests  141 passed (141)
-   Start at  00:30:26
-   Duration  51.85s (tests 45%, environment 35%, setup 9%, import 7%, transform 2%, worker 2%)
+ Test Files  25 passed (25)
+      Tests  147 passed (147)
+   Start at  00:55:49
+   Duration  41.46s (environment 45%, tests 36%, setup 8%, import 7%, worker 2%, transform 2%)
 
-Environment  jsdom was created 23 times · 48.94s total, 35% of tracked time
+Environment  jsdom was created 25 times · 49.57s total, 45% of tracked time
              create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
              learn more: https://vitest.dev/guide/improving-performance#test-environments
 
@@ -157,14 +163,14 @@ Environment  jsdom was created 23 times · 48.94s total, 35% of tracked time
 -------------------|---------|----------|---------|---------|-------------------
 File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
 -------------------|---------|----------|---------|---------|-------------------
-All files          |   98.96 |    95.43 |   98.42 |   99.29 |                   
+All files          |   98.99 |    95.63 |   98.46 |   99.31 |                   
  src/api           |   95.74 |     91.3 |      95 |    97.5 |                   
   client.ts        |    91.3 |    94.11 |      80 |   94.11 | 32                
   errorText.ts     |     100 |       50 |     100 |     100 | 3                 
- src/components    |   99.53 |    97.63 |    98.9 |   99.44 |                   
-  CheckoutForm.tsx |   97.56 |     87.5 |   96.42 |   96.96 | 117               
-  Modal.tsx        |     100 |       75 |     100 |     100 | 22                
- src/pages         |   98.88 |     93.2 |   98.41 |   99.39 |                   
+ src/components    |   99.55 |    97.84 |   98.95 |   99.47 |                   
+  CheckoutForm.tsx |   97.56 |     87.5 |   96.42 |   96.96 | 118               
+  Modal.tsx        |     100 |       75 |     100 |     100 | 36                
+ src/pages         |   98.89 |     93.2 |   98.41 |    99.4 |                   
   ...outDialog.tsx |   83.33 |       50 |   66.66 |   83.33 | 22                
   OrdersPage.tsx   |     100 |    92.85 |     100 |     100 | 44                
   RegisterPage.tsx |   96.55 |    83.33 |     100 |     100 | 22                
@@ -173,8 +179,8 @@ All files          |   98.96 |    95.43 |   98.42 |   99.29 |
 -------------------|---------|----------|---------|---------|-------------------
 
 =============================== Coverage summary ===============================
-Statements   : 98.96% ( 480/485 )
-Branches     : 95.43% ( 251/263 )
-Functions    : 98.42% ( 187/190 )
-Lines        : 99.29% ( 423/426 )
+Statements   : 98.99% ( 494/499 )
+Branches     : 95.63% ( 263/275 )
+Functions    : 98.46% ( 192/195 )
+Lines        : 99.31% ( 433/436 )
 ================================================================================
