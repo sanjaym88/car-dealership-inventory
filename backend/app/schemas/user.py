@@ -19,6 +19,15 @@ class UserCreate(BaseModel):
         return email
 
 
+class AdminCreate(UserCreate):
+    """Same rules as registration, minus the DNS check: whoever runs create_admin is trusted."""
+
+    @field_validator("email")
+    @classmethod
+    def domain_must_accept_mail(cls, email: str) -> str:
+        return email
+
+
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str

@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import SessionLocal
 from app.repositories.user_repository import UserRepository
-from app.schemas.user import UserCreate
+from app.schemas.user import AdminCreate
 from app.services.auth_service import AuthService
 
 
@@ -26,7 +26,7 @@ def main(argv: list[str] | None = None, session_factory: Callable[[], Session] =
     password = args.password if args.password is not None else getpass.getpass("Password: ")
 
     try:
-        data = UserCreate(email=args.email, password=password)
+        data = AdminCreate(email=args.email, password=password)
     except ValidationError as exc:
         print(f"Invalid input: {exc}", file=sys.stderr)
         return 1
