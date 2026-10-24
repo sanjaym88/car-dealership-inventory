@@ -12,7 +12,12 @@ import { buttonClass } from '../components/buttonStyles'
 
 export type Panel = 'login' | 'register'
 
-const HERO_CLIPS = [nightDrive1, nightDrive2, nightDrive3]
+// Durations are one play of each GIF (the sum of its frame delays), so each clip plays once.
+const HERO_CLIPS = [
+  { src: nightDrive1, duration: 2400 },
+  { src: nightDrive2, duration: 1740 },
+  { src: nightDrive3, duration: 1950 },
+]
 
 function GarageDoor() {
   return (

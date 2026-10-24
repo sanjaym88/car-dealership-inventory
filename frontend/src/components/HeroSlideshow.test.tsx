@@ -71,7 +71,9 @@ test('each clip restarts from its first frame when its turn comes round again', 
   await flushLoads()
   const firstPlay = images()[0].src
 
-  act(() => vi.advanceTimersByTime(2400 + 1740 + 1950)) // back to clip 1
+  // back round to clip 1 (one step per clip: each switch schedules the next timer)
+  for (const ms of [2400, 1740, 1950]) act(() => vi.advanceTimersByTime(ms))
+  expect(active()).toBe(0)
 
   // A new object URL makes the browser start the GIF over, without downloading it again.
   expect(images()[0].src).toMatch(/^blob:fresh-/)
