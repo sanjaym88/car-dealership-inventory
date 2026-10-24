@@ -2,6 +2,8 @@ import os
 
 # Must be set before the app is imported, since settings are read at import time.
 os.environ.setdefault("BCRYPT_ROUNDS", "4")  # minimum cost: fast tests, same code path
+# Fixtures use example.com, which accepts no mail by design; test_email_domain.py covers the check.
+os.environ.setdefault("CHECK_EMAIL_DOMAIN", "false")
 
 import pytest
 from fastapi.testclient import TestClient
