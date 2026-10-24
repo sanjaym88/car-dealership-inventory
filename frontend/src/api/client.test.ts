@@ -12,6 +12,10 @@ function mockFetch(status: number, body?: unknown) {
   return fetchMock
 }
 
+async function captureError(promise: Promise<unknown>): Promise<ApiError> {
+  return (await promise.catch((e: unknown) => e)) as ApiError
+}
+
 afterEach(() => {
   vi.unstubAllGlobals()
   tokenStorage.clear()
@@ -50,7 +54,7 @@ test('sends no Authorization header when logged out', async () => {
 test('throws ApiError with status and server message on failure', async () => {
   mockFetch(409, { detail: 'Vehicle is out of stock' })
 
-  const error = await apiFetch('/api/vehicles/1/purchase', { method: 'POST' }).catch((e) => e)
+  const error = await captureError(apiFetch('/api/vehicles/1/purchase', { method: 'POST' }))
 
   expect(error).toBeInstanceOf(ApiError)
   expect(error.status).toBe(409)
@@ -60,7 +64,7 @@ test('throws ApiError with status and server message on failure', async () => {
 test('turns FastAPI validation errors into a readable message', async () => {
   mockFetch(422, { detail: [{ msg: 'Input should be greater than 0', loc: ['body', 'price'] }] })
 
-  const error = await apiFetch('/api/vehicles', { method: 'POST', body: {} }).catch((e) => e)
+  const error = await captureError(apiFetch('/api/vehicles', { method: 'POST', body: {} }))
 
   expect(error.status).toBe(422)
   expect(error.message).toBe('price: Input should be greater than 0')
