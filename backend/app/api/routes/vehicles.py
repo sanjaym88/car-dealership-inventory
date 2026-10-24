@@ -1,11 +1,13 @@
 """HTTP layer for /api/vehicles. Every route needs a login; delete also needs admin."""
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user, require_admin
 from app.core.database import get_db
 from app.repositories.vehicle_repository import VehicleRepository
-from app.schemas.vehicle import VehicleCreate, VehicleRead, VehicleUpdate
+from app.schemas.vehicle import VehicleCreate, VehicleRead, VehicleSearch, VehicleUpdate
 from app.services.vehicle_service import VehicleNotFoundError, VehicleService
 
 router = APIRouter(
@@ -29,6 +31,14 @@ def create_vehicle(data: VehicleCreate, service: VehicleService = Depends(get_ve
 @router.get("", response_model=list[VehicleRead])
 def list_vehicles(service: VehicleService = Depends(get_vehicle_service)):
     return service.list_all()
+
+
+@router.get("/search", response_model=list[VehicleRead])
+def search_vehicles(
+    criteria: Annotated[VehicleSearch, Query()],
+    service: VehicleService = Depends(get_vehicle_service),
+):
+    return service.search(criteria)
 
 
 @router.put("/{vehicle_id}", response_model=VehicleRead)

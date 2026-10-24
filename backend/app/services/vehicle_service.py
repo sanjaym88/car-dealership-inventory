@@ -3,7 +3,7 @@ from collections.abc import Sequence
 
 from app.models.vehicle import Vehicle
 from app.repositories.vehicle_repository import VehicleRepository
-from app.schemas.vehicle import VehicleCreate, VehicleUpdate
+from app.schemas.vehicle import VehicleCreate, VehicleSearch, VehicleUpdate
 
 
 class VehicleNotFoundError(Exception):
@@ -19,6 +19,9 @@ class VehicleService:
 
     def list_all(self) -> Sequence[Vehicle]:
         return self.vehicles.list_all()
+
+    def search(self, criteria: VehicleSearch) -> Sequence[Vehicle]:
+        return self.vehicles.search(criteria)
 
     def get(self, vehicle_id: int) -> Vehicle:
         vehicle = self.vehicles.get(vehicle_id)

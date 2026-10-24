@@ -1,10 +1,11 @@
 """Database access for vehicles. Keeps SQL out of the service layer."""
 from collections.abc import Sequence
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models.vehicle import Vehicle
+from app.schemas.vehicle import VehicleSearch
 
 
 class VehicleRepository:
@@ -13,6 +14,21 @@ class VehicleRepository:
 
     def list_all(self) -> Sequence[Vehicle]:
         return self.db.scalars(select(Vehicle).order_by(Vehicle.id)).all()
+
+    def search(self, criteria: VehicleSearch) -> Sequence[Vehicle]:
+        query = select(Vehicle).order_by(Vehicle.id)
+        # autoescape: user-typed % and _ are matched literally, not as SQL wildcards.
+        if criteria.make:
+            query = query.where(Vehicle.make.icontains(criteria.make, autoescape=True))
+        if criteria.model:
+            query = query.where(Vehicle.model.icontains(criteria.model, autoescape=True))
+        if criteria.category:
+            query = query.where(func.lower(Vehicle.category) == criteria.category.lower())
+        if criteria.min_price is not None:
+            query = query.where(Vehicle.price >= criteria.min_price)
+        if criteria.max_price is not None:
+            query = query.where(Vehicle.price <= criteria.max_price)
+        return self.db.scalars(query).all()
 
     def get(self, vehicle_id: int) -> Vehicle | None:
         return self.db.get(Vehicle, vehicle_id)
