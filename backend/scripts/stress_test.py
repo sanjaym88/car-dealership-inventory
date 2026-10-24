@@ -2,8 +2,9 @@
 
 Usage (stack running, e.g. `docker compose --profile app up`):
     python scripts/stress_test.py [base_url] [admin_email] [admin_password]
-Defaults target the local Docker demo. Creates throwaway accounts and vehicles, so never point it
-at a production deployment.
+Defaults target the local Docker demo. Creates throwaway accounts (stress.*@gmail.com) and test
+vehicles; the vehicles are deleted again at the end, accounts stay (the API has no user delete).
+Never point it at a production deployment.
 """
 
 import concurrent.futures
@@ -17,6 +18,7 @@ ADMIN = (sys.argv[2], sys.argv[3]) if len(sys.argv) > 3 else ("admin@example.com
 RUN = uuid.uuid4().hex[:6]  # keeps each run's accounts unique
 client = httpx.Client(base_url=BASE, timeout=30)
 results: list[tuple[str, bool, str]] = []
+created_vehicle_ids: list[int] = []  # removed again at the end
 
 
 def check(name: str, ok: bool, detail: str = "") -> None:
@@ -39,7 +41,10 @@ def token(addr: str, password: str = "secret123") -> dict:
 
 def vehicle(headers: dict, **overrides) -> httpx.Response:
     body = {"make": "Stress", "model": f"Test-{RUN}", "category": "Sedan", "price": 20000, "quantity": 3}
-    return client.post("/api/vehicles", json={**body, **overrides}, headers=headers)
+    response = client.post("/api/vehicles", json={**body, **overrides}, headers=headers)
+    if response.status_code == 201:
+        created_vehicle_ids.append(response.json()["id"])
+    return response
 
 
 # 1. Registration happy path
@@ -223,6 +228,10 @@ codes = [
     for i in range(30)
 ]
 check("20 30 rapid wrong-password logins get throttled (429)", 429 in codes, f"{sorted(set(codes))}")
+
+# Clean up: remove every test vehicle so the showroom is left as it was.
+for vehicle_id in created_vehicle_ids:
+    client.delete(f"/api/vehicles/{vehicle_id}", headers=admin)
 
 width = max(len(n) for n, _, _ in results)
 for name, ok, detail in results:
