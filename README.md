@@ -8,9 +8,10 @@ manage the inventory and see every sale.
 
 - **Backend:** FastAPI REST API with JWT authentication and role-based access, backed by PostgreSQL.
 - **Frontend:** React + TypeScript single-page app styled with Tailwind CSS.
-- **Quality:** 249 automated tests (122 backend, 127 frontend) at ~99% coverage, run on every push by GitHub Actions.
+- **Quality:** 271 automated tests (130 backend, 141 frontend) at ~99% coverage, plus linting, run on every push by GitHub Actions.
+- **One command to try it:** `docker compose --profile app up --build`, then open http://localhost:8080.
 
-![Inventory with car photos](docs/screenshots/03-inventory.jpg)
+![Landing page](docs/screenshots/01-landing.jpg)
 
 ---
 
@@ -33,8 +34,16 @@ manage the inventory and see every sale.
 
 ## Features
 
+**Look and feel**
+- Animated landing page: a night drive past a city skyline, drawn in SVG/CSS (no video or GIF files).
+- *Log in* and *Sign up* slide the scene aside and roll a garage door up to reveal the form. The submit
+  button is a car whose wheels spin on hover and which drives off while you are being logged in.
+- The same night sky sits behind every page, with smooth button, card and page transitions. Motion is turned
+  off for anyone whose system asks for reduced motion.
+
 **Everyone (logged in)**
 - Register and log in; the session survives a page refresh and expired tokens are discarded cleanly.
+- Sign-ups with an email domain that can't receive mail (typos like `gmial.con`, made-up domains) are rejected.
 - Showroom of vehicles with photos, price, category and live stock, plus an inventory summary.
 - Search and filter by make, model (partial, case-insensitive), category and price range.
 - **Checkout:** *Purchase* opens a checkout where you choose paint, trim package, add-ons and delivery, with a
@@ -59,9 +68,9 @@ manage the inventory and see every sale.
 
 ## Screenshots
 
-| Login | Register |
+| Garage-door login with the car button | Inventory on the night theme |
 |---|---|
-| ![Login](docs/screenshots/01-login.jpg) | ![Register](docs/screenshots/02-register.jpg) |
+| ![Login](docs/screenshots/02-login.jpg) | ![Inventory](docs/screenshots/03-inventory.jpg) |
 
 | Checkout with customisation | My orders |
 |---|---|
@@ -79,7 +88,9 @@ manage the inventory and see every sale.
 | Database | PostgreSQL 16 (Docker) |
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS 4, React Router |
 | Testing | Pytest, pytest-cov, HTTPX/TestClient; Vitest, Testing Library, @vitest/coverage-v8 |
-| CI | GitHub Actions (backend tests against Postgres; frontend lint, tests and build) |
+| Quality | Ruff (lint + format) for Python, oxlint for TypeScript |
+| CI | GitHub Actions (backend lint, format check and tests against Postgres; frontend lint, tests and build) |
+| Containers | Docker Compose: Postgres, API image, nginx serving the React build |
 
 ## Architecture
 
@@ -135,6 +146,21 @@ Every vehicle has a unique `id`, `make`, `model`, `category`, `price` (> 0), `qu
 Protected routes expect `Authorization: Bearer <token>`.
 
 ## Running locally
+
+### Quickest: everything in Docker
+
+**Prerequisite:** Docker Desktop.
+
+```bash
+docker compose --profile app up --build
+```
+
+Open http://localhost:8080. The API container migrates the database, seeds the 30-car showroom and creates a
+demo admin (`admin@example.com` / `autovault-demo`; change them with the `ADMIN_EMAIL` and `ADMIN_PASSWORD`
+environment variables). The API docs are at http://localhost:8080/docs. Stop everything with
+`docker compose --profile app down`.
+
+### For development
 
 **Prerequisites:** Python 3.12, Node.js 24, Docker Desktop.
 
@@ -207,6 +233,7 @@ python -m app.scripts.create_admin --email you@example.com
 # backend (needs the db_test container from docker compose)
 cd backend
 pytest --cov --cov-report=term-missing
+ruff check . && ruff format --check .
 
 # frontend
 cd frontend
@@ -221,8 +248,8 @@ All tests pass; full output is in [`docs/test-report/`](docs/test-report/).
 
 | Suite | Tests | Result | Coverage |
 |---|---|---|---|
-| Backend (pytest, real PostgreSQL) | 122 | ✅ all passed | 99% of statements |
-| Frontend (Vitest + Testing Library) | 127 | ✅ all passed | 98.8% statements · 94.9% branches |
+| Backend (pytest, real PostgreSQL) | 130 | ✅ all passed | 99% of statements |
+| Frontend (Vitest + Testing Library) | 141 | ✅ all passed | 99.0% statements · 95.4% branches |
 
 What is covered:
 - **Auth:** registration rules, bcrypt hashing, login, identical errors for unknown email and wrong password,
@@ -232,6 +259,11 @@ What is covered:
   updates, and `404`s.
 - **Search:** each filter, combined filters, inclusive price bounds, literal `%`/`_`, and invalid ranges.
 - **Inventory:** purchase down to zero, `409` when sold out, restock validation.
+- **Concurrency:** 20 buyers on separate database connections, released at the same instant, race for a car
+  with 5 in stock. Exactly 5 succeed, stock ends at 0, and there are exactly 5 orders. To check the test can
+  catch the bug, a naive read-then-write purchase was swapped in temporarily: it sold 20 cars out of 5.
+- **Email domains:** undeliverable domains rejected at sign-up (DNS faked in tests), the check switchable,
+  login unaffected, and the admin script exempt.
 - **Checkout and orders:** option catalog, server-side totals and receipts, defaults, unknown options rejected
   without buying, client prices ignored, no order on a failed purchase, own-orders-only history, admin sales,
   and history surviving vehicle deletion.
@@ -265,8 +297,10 @@ Raw output: [backend.txt](docs/test-report/backend.txt) · [frontend.txt](docs/t
 - **Domain errors, not HTTP, in services.** Services raise `VehicleNotFoundError` or `OutOfStockError`;
   `api/errors.py` maps them to status codes in one place.
 
-**Known limitation:** registration checks that an email is well-formed, not that the mailbox exists or belongs to
-the user. Real verification would need an emailed confirmation link and an email-sending service.
+**Email checks and their limit:** registration checks that the email is well-formed *and* that its domain has
+mail servers. If DNS can't be reached the address is allowed, so an outage never blocks sign-ups. It still can't
+prove the mailbox exists or belongs to the user; that needs an emailed confirmation link and an
+email-sending service.
 
 **Photo credits:** car photos are the lead images of the models' Wikipedia articles, hosted on
 [Wikimedia Commons](https://commons.wikimedia.org/) under their respective free licences (mostly CC BY-SA).
