@@ -26,7 +26,7 @@ def test_purchase_decreases_quantity_by_one(client, user_headers, create_vehicle
     response = client.post(purchase_url(vehicle["id"]), headers=user_headers)
 
     assert response.status_code == 200
-    assert response.json() == {**vehicle, "quantity": 2}
+    assert response.json()["vehicle"] == {**vehicle, "quantity": 2}
     assert stock_of(client, user_headers, vehicle["id"]) == 2
 
 
@@ -35,7 +35,7 @@ def test_purchase_of_last_unit_leaves_zero(client, user_headers, create_vehicle)
 
     response = client.post(purchase_url(vehicle["id"]), headers=user_headers)
 
-    assert response.json()["quantity"] == 0
+    assert response.json()["vehicle"]["quantity"] == 0
 
 
 def test_purchase_when_out_of_stock_is_409_and_stock_stays_zero(client, user_headers, create_vehicle):
