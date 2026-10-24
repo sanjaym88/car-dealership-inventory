@@ -220,14 +220,9 @@ Browser ──▶ Vercel (React build) ──/api/*──▶ Render (FastAPI) �
 Because Vercel proxies `/api`, the browser only talks to one origin, so no CORS setup is needed. In production
 (`ENVIRONMENT=production`) the API refuses to start without a strong `JWT_SECRET`; Render generates one.
 
-To create the first admin on the hosted database, run the script locally against Neon:
-
-```bash
-cd backend
-set DATABASE_URL=<neon connection string>      # macOS/Linux: export DATABASE_URL=...
-python -m app.scripts.seed_inventory
-python -m app.scripts.create_admin --email you@example.com
-```
+On every start the API runs the same script as the Docker image (`backend/docker-entrypoint.sh`): it
+migrates, seeds the 30-car catalog (adding only what's missing), and creates an admin if `ADMIN_EMAIL` and
+`ADMIN_PASSWORD` are set under the Render service's *Environment* tab.
 
 ## Running the tests
 

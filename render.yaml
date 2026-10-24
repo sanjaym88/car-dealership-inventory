@@ -1,5 +1,6 @@
 # Render Blueprint for the FastAPI backend (free plan). The database is hosted on Neon.
 # Render prompts for DATABASE_URL when the Blueprint is created; JWT_SECRET is generated automatically.
+# Optional: add ADMIN_EMAIL and ADMIN_PASSWORD under the service's Environment tab to create an admin.
 services:
   - type: web
     name: car-dealership-api
@@ -7,8 +8,9 @@ services:
     plan: free
     rootDir: backend
     buildCommand: pip install -r requirements.txt
-    # Apply pending migrations on every deploy, then serve on the port Render assigns.
-    startCommand: alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    # Same start-up as the Docker image: migrate, seed the catalog (adds only what's missing),
+    # create an admin if ADMIN_EMAIL and ADMIN_PASSWORD are set in the dashboard, then serve on $PORT.
+    startCommand: sh docker-entrypoint.sh
     healthCheckPath: /api/health
     envVars:
       - key: PYTHON_VERSION
