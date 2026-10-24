@@ -1,7 +1,11 @@
 import type { Vehicle } from '../api/types'
 import { formatPrice } from './formatPrice'
 
-export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
+export function VehicleCard({ vehicle, onPurchase, purchasing = false }: {
+  vehicle: Vehicle
+  onPurchase: (vehicle: Vehicle) => void
+  purchasing?: boolean
+}) {
   const inStock = vehicle.quantity > 0
   return (
     <article className="flex flex-col rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md">
@@ -17,6 +21,10 @@ export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {
       <p className={`mt-1 text-sm font-medium ${inStock ? 'text-emerald-600' : 'text-rose-600'}`}>
         {inStock ? `${vehicle.quantity} in stock` : 'Out of stock'}
       </p>
+      <button type="button" onClick={() => onPurchase(vehicle)} disabled={!inStock || purchasing}
+        className="mt-5 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none">
+        {purchasing ? 'Purchasing…' : 'Purchase'}
+      </button>
     </article>
   )
 }
