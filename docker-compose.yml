@@ -1,3 +1,5 @@
+# Development:  docker compose up -d                      -> just the databases (5432 dev, 5433 tests)
+# Full stack:   docker compose --profile app up --build   -> database + API + website on http://localhost:8080
 services:
   db:
     image: postgres:16
@@ -7,6 +9,11 @@ services:
       POSTGRES_DB: car
     ports: ["5432:5432"]
     volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U car -d car"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
 
   # Separate, throwaway database for the test suite
   db_test:
@@ -16,6 +23,25 @@ services:
       POSTGRES_PASSWORD: car
       POSTGRES_DB: car_test
     ports: ["5433:5432"]
+
+  api:
+    profiles: [app]
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://car:car@db:5432/car
+      JWT_SECRET: ${JWT_SECRET:-local-docker-demo-secret}
+      # Demo admin for local use only; override both, or unset them to skip creating one.
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-autovault-demo}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    profiles: [app]
+    build: ./frontend
+    ports: ["8080:80"]
+    depends_on: [api]
 
 volumes:
   pgdata:
