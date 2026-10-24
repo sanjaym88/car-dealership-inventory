@@ -27,6 +27,10 @@ class VehicleUpdate(BaseModel):
     quantity: Quantity | None = None
 
 
+class RestockRequest(BaseModel):
+    quantity: Annotated[int, Field(gt=0)]
+
+
 class VehicleSearch(BaseModel):
     """Query parameters for /search. Every filter is optional; given filters are combined with AND."""
 

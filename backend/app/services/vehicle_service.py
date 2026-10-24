@@ -10,6 +10,10 @@ class VehicleNotFoundError(Exception):
     pass
 
 
+class OutOfStockError(Exception):
+    pass
+
+
 class VehicleService:
     def __init__(self, vehicles: VehicleRepository):
         self.vehicles = vehicles
@@ -38,3 +42,17 @@ class VehicleService:
 
     def delete(self, vehicle_id: int) -> None:
         self.vehicles.delete(self.get(vehicle_id))
+
+    def purchase(self, vehicle_id: int) -> Vehicle:
+        vehicle = self.vehicles.decrement_stock(vehicle_id)
+        if vehicle is None:
+            # Nothing was updated: tell apart "no such vehicle" from "none left".
+            self.get(vehicle_id)
+            raise OutOfStockError
+        return vehicle
+
+    def restock(self, vehicle_id: int, amount: int) -> Vehicle:
+        vehicle = self.vehicles.increment_stock(vehicle_id, amount)
+        if vehicle is None:
+            raise VehicleNotFoundError
+        return vehicle

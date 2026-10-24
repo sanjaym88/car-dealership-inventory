@@ -7,8 +7,14 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_current_user, require_admin
 from app.core.database import get_db
 from app.repositories.vehicle_repository import VehicleRepository
-from app.schemas.vehicle import VehicleCreate, VehicleRead, VehicleSearch, VehicleUpdate
-from app.services.vehicle_service import VehicleNotFoundError, VehicleService
+from app.schemas.vehicle import (
+    RestockRequest,
+    VehicleCreate,
+    VehicleRead,
+    VehicleSearch,
+    VehicleUpdate,
+)
+from app.services.vehicle_service import OutOfStockError, VehicleNotFoundError, VehicleService
 
 router = APIRouter(
     prefix="/api/vehicles", tags=["vehicles"], dependencies=[Depends(get_current_user)]
@@ -62,3 +68,29 @@ def delete_vehicle(vehicle_id: int, service: VehicleService = Depends(get_vehicl
     except VehicleNotFoundError:
         raise not_found()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post("/{vehicle_id}/purchase", response_model=VehicleRead)
+def purchase_vehicle(vehicle_id: int, service: VehicleService = Depends(get_vehicle_service)):
+    try:
+        return service.purchase(vehicle_id)
+    except VehicleNotFoundError:
+        raise not_found()
+    except OutOfStockError:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Vehicle is out of stock")
+
+
+@router.post(
+    "/{vehicle_id}/restock",
+    response_model=VehicleRead,
+    dependencies=[Depends(require_admin)],
+)
+def restock_vehicle(
+    vehicle_id: int,
+    data: RestockRequest,
+    service: VehicleService = Depends(get_vehicle_service),
+):
+    try:
+        return service.restock(vehicle_id, data.quantity)
+    except VehicleNotFoundError:
+        raise not_found()
