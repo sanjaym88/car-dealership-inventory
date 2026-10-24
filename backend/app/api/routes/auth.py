@@ -4,8 +4,12 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.repositories.user_repository import UserRepository
-from app.schemas.user import UserCreate, UserRead
-from app.services.auth_service import AuthService, EmailAlreadyRegisteredError
+from app.schemas.user import LoginRequest, Token, UserCreate, UserRead
+from app.services.auth_service import (
+    AuthService,
+    EmailAlreadyRegisteredError,
+    InvalidCredentialsError,
+)
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -20,3 +24,15 @@ def register(data: UserCreate, service: AuthService = Depends(get_auth_service))
         return service.register(data)
     except EmailAlreadyRegisteredError:
         raise HTTPException(status.HTTP_409_CONFLICT, "Email already registered")
+
+
+@router.post("/login", response_model=Token)
+def login(data: LoginRequest, service: AuthService = Depends(get_auth_service)):
+    try:
+        return Token(access_token=service.login(data.email, data.password))
+    except InvalidCredentialsError:
+        raise HTTPException(
+            status.HTTP_401_UNAUTHORIZED,
+            "Invalid email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
