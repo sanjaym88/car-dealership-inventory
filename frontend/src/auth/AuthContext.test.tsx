@@ -2,8 +2,9 @@ import { act, renderHook, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
 import { authApi } from '../api/auth'
 import { ApiError } from '../api/client'
-import { AuthProvider, useAuth } from './AuthContext'
+import { AuthProvider } from './AuthContext'
 import { tokenStorage } from './tokenStorage'
+import { useAuth } from './useAuth'
 
 vi.mock('../api/auth', () => ({
   authApi: { login: vi.fn(), register: vi.fn(), me: vi.fn() },

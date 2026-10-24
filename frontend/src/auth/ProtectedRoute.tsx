@@ -1,6 +1,6 @@
 // Layout route: renders its child routes only for logged-in users, otherwise sends them to /login.
 import { Navigate, Outlet, useLocation } from 'react-router'
-import { useAuth } from './AuthContext'
+import { useAuth } from './useAuth'
 
 export function ProtectedRoute() {
   const { user, loading } = useAuth()

@@ -1,20 +1,10 @@
-// Holds who is logged in and exposes login/register/logout to the whole app.
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+// Holds who is logged in and exposes login/register/logout to the whole app (read it with useAuth).
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { authApi } from '../api/auth'
 import type { User } from '../api/types'
+import { AuthContext } from './context'
 import { tokenStorage } from './tokenStorage'
-
-interface AuthState {
-  user: User | null
-  /** True while a stored token is being checked on first load. */
-  loading: boolean
-  login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string) => Promise<void>
-  logout: () => void
-}
-
-const AuthContext = createContext<AuthState | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -54,10 +44,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [user, loading, login, register, logout],
   )
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-}
-
-export function useAuth(): AuthState {
-  const context = useContext(AuthContext)
-  if (context === null) throw new Error('useAuth must be used inside <AuthProvider>')
-  return context
 }
