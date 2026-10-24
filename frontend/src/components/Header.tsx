@@ -2,13 +2,13 @@ import { NavLink } from 'react-router'
 import { useAuth } from '../auth/useAuth'
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
-  `rounded-lg px-3 py-1.5 font-medium transition ${
+  `rounded-full px-3 py-1.5 font-medium transition duration-300 ${
     isActive ? 'bg-white/15 text-white' : 'text-slate-300 hover:bg-white/10 hover:text-white'}`
 
 export function Header() {
   const { user, logout } = useAuth()
   return (
-    <header className="bg-slate-900 text-white">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/60 text-white backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3">
         <div className="flex items-center gap-4">
           <p className="text-lg font-bold tracking-tight">
@@ -28,7 +28,7 @@ export function Header() {
           )}
           <span className="hidden text-slate-300 md:inline">{user?.email}</span>
           <button type="button" onClick={logout}
-            className="rounded-lg bg-white/10 px-3 py-1.5 font-medium transition hover:bg-white/20">
+            className="rounded-full bg-white/10 px-3 py-1.5 font-medium transition duration-300 hover:bg-white/20">
             Log out
           </button>
         </div>

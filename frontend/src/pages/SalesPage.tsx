@@ -22,10 +22,10 @@ export function SalesPage() {
     <PageShell title="Sales">
       <ErrorMessage message={error} />
       {orders === null && error === null && (
-        <p role="status" className="py-16 text-center text-slate-500">Loading sales…</p>
+        <p role="status" className="py-16 text-center text-slate-300">Loading sales…</p>
       )}
       {orders?.length === 0 && (
-        <p className="rounded-2xl border-2 border-dashed border-slate-200 py-16 text-center text-slate-500">
+        <p className="rounded-2xl border-2 border-dashed border-white/15 bg-white/5 py-16 text-center text-slate-300 backdrop-blur">
           No sales yet.
         </p>
       )}

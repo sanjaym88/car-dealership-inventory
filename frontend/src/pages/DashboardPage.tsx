@@ -49,25 +49,26 @@ export function DashboardPage() {
       )}
 
       {inv.results === null && inv.error === null && (
-        <p role="status" className="py-16 text-center text-slate-500">Loading vehicles…</p>
+        <p role="status" className="py-16 text-center text-slate-300">Loading vehicles…</p>
       )}
 
       {inv.searching && inv.results && (
-        <p className="mb-4 text-sm text-slate-500">
+        <p className="mb-4 text-sm text-slate-300">
           {inv.results.length} {inv.results.length === 1 ? 'result' : 'results'}
         </p>
       )}
 
       {inv.results?.length === 0 && (
-        <p className="rounded-2xl border-2 border-dashed border-slate-200 py-16 text-center text-slate-500">
+        <p className="rounded-2xl border-2 border-dashed border-white/15 bg-white/5 py-16 text-center text-slate-300 backdrop-blur">
           {inv.searching ? 'No vehicles match your search.' : 'No vehicles yet. Check back soon!'}
         </p>
       )}
 
       {inv.results && inv.results.length > 0 && (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {inv.results.map((vehicle) => (
+          {inv.results.map((vehicle, index) => (
             <VehicleCard key={vehicle.id} vehicle={vehicle} onPurchase={setBuying}
+              entranceDelay={Math.min(index, 8) * 50}
               purchasing={inv.purchasingId === vehicle.id} admin={adminActions} />
           ))}
         </div>

@@ -48,12 +48,12 @@ export function OrdersPage() {
     <PageShell title="My orders" subtitle={subtitle}>
       <ErrorMessage message={error} />
       {orders === null && error === null && (
-        <p role="status" className="py-16 text-center text-slate-500">Loading orders…</p>
+        <p role="status" className="py-16 text-center text-slate-300">Loading orders…</p>
       )}
       {orders?.length === 0 && (
-        <div className="rounded-2xl border-2 border-dashed border-slate-200 py-16 text-center text-slate-500">
+        <div className="rounded-2xl border-2 border-dashed border-white/15 bg-white/5 py-16 text-center text-slate-300 backdrop-blur">
           <p>You haven't bought anything yet.</p>
-          <Link to="/" className="mt-2 inline-block font-medium text-indigo-600 hover:underline">
+          <Link to="/" className="mt-2 inline-block font-medium text-rose-300 transition hover:text-rose-200 hover:underline">
             Browse the inventory
           </Link>
         </div>

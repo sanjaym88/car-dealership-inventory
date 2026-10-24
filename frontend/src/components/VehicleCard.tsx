@@ -9,12 +9,14 @@ export interface AdminActions {
   onDelete: (vehicle: Vehicle) => void
 }
 
-export function VehicleCard({ vehicle, onPurchase, purchasing = false, admin }: {
+export function VehicleCard({ vehicle, onPurchase, purchasing = false, admin, entranceDelay = 0 }: {
   vehicle: Vehicle
   onPurchase: (vehicle: Vehicle) => void
   purchasing?: boolean
   /** Only passed for admins; regular users never see these controls. */
   admin?: AdminActions
+  /** Milliseconds before the card fades in, to stagger a grid. */
+  entranceDelay?: number
 }) {
   const headingId = useId()
   const inStock = vehicle.quantity > 0
@@ -22,8 +24,8 @@ export function VehicleCard({ vehicle, onPurchase, purchasing = false, admin }: 
   const adminButton = 'rounded-lg px-2.5 py-1.5 text-xs font-medium transition'
 
   return (
-    <article aria-labelledby={headingId}
-      className="flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md">
+    <article aria-labelledby={headingId} style={{ animationDelay: `${entranceDelay}ms` }}
+      className="group flex animate-fade-up flex-col overflow-hidden rounded-2xl bg-white shadow-lg shadow-black/20 ring-1 ring-white/10 transition duration-500 ease-silk hover:-translate-y-1 hover:shadow-2xl hover:shadow-rose-900/30">
       <VehiclePhoto src={vehicle.image_url} name={name}
         className={`aspect-[16/10] ${inStock ? '' : 'opacity-60 grayscale'}`} />
 
@@ -42,7 +44,7 @@ export function VehicleCard({ vehicle, onPurchase, purchasing = false, admin }: 
         {/* mt-auto keeps the button at the bottom so buttons line up across a row of cards */}
         <div className="mt-auto pt-5">
           <button type="button" onClick={() => onPurchase(vehicle)} disabled={!inStock || purchasing}
-            className="w-full rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none">
+            className="w-full rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-emerald-900/20 transition duration-300 hover:-translate-y-0.5 hover:bg-emerald-500 hover:shadow-lg disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none">
             {purchasing ? 'Purchasing…' : 'Purchase'}
           </button>
         </div>

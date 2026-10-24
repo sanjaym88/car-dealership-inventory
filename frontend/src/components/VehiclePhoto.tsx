@@ -20,7 +20,7 @@ export function VehiclePhoto({ src, name, className = '' }: {
   return (
     <div className={frame}>
       <img src={src} alt={name} loading="lazy" onError={() => setFailed(true)}
-        className="h-full w-full object-cover" />
+        className="h-full w-full object-cover transition-transform duration-700 ease-silk group-hover:scale-105" />
     </div>
   )
 }
