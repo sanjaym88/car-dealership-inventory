@@ -15,7 +15,11 @@ const toFields = (v?: VehicleInput): Fields => ({
   category: v?.category ?? '',
   price: v ? String(v.price) : '',
   quantity: v ? String(v.quantity) : '',
+  image_url: v?.image_url ?? '',
 })
+
+// Same rule as the API: plain web links only, so nothing like javascript: reaches <img src>.
+const WEB_URL = /^https?:\/\/\S+$/
 
 /** Returns the cleaned vehicle, or an error message for the first invalid field. */
 function validate(fields: Fields): VehicleInput | string {
@@ -31,7 +35,9 @@ function validate(fields: Fields): VehicleInput | string {
   if (fields.quantity.trim() === '' || !Number.isInteger(quantity) || quantity < 0) {
     return 'Quantity must be a whole number of 0 or more.'
   }
-  return { make, model, category, price, quantity }
+  const imageUrl = fields.image_url.trim()
+  if (imageUrl && !WEB_URL.test(imageUrl)) return 'Photo URL must start with http:// or https://'
+  return { make, model, category, price, quantity, ...(imageUrl && { image_url: imageUrl }) }
 }
 
 export function VehicleForm({ initial, submitLabel, onSubmit, onCancel }: {
@@ -67,6 +73,8 @@ export function VehicleForm({ initial, submitLabel, onSubmit, onCancel }: {
         <FormField label="Price (USD)" type="number" min={0} step="any" value={fields.price} onChange={update('price')} />
         <FormField label="Quantity in stock" type="number" min={0} step={1} value={fields.quantity} onChange={update('quantity')} />
       </div>
+      <FormField label="Photo URL (optional)" type="url" placeholder="https://…"
+        value={fields.image_url} onChange={update('image_url')} />
       <ErrorMessage message={error} />
       <FormActions pending={pending} label={submitLabel} pendingLabel="Saving…" onCancel={onCancel} />
     </form>
