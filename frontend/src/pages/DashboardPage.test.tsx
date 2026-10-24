@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
 import { ApiError } from '../api/client'
@@ -9,7 +9,9 @@ import { admin, alice, authState } from '../test/authMock'
 import { DashboardPage } from './DashboardPage'
 
 vi.mock('../auth/useAuth', () => ({ useAuth: vi.fn() }))
-vi.mock('../api/vehicles', () => ({ vehiclesApi: { list: vi.fn() } }))
+vi.mock('../api/vehicles', () => ({
+  vehiclesApi: { list: vi.fn(), search: vi.fn(), purchase: vi.fn() },
+}))
 
 const mockedUseAuth = vi.mocked(useAuth)
 const api = vi.mocked(vehiclesApi)
@@ -97,4 +99,72 @@ test('header shows an Admin badge for admins', async () => {
 
   expect(screen.getByText('Admin')).toBeInTheDocument()
   await screen.findByText(/no vehicles yet/i)
+})
+
+// --- search (F4) ---
+
+const rav4: Vehicle = { id: 3, make: 'Toyota', model: 'RAV4', category: 'SUV', price: 32000, quantity: 3 }
+
+function cardTitles() {
+  return screen.getAllByRole('article').map((card) => within(card).getByRole('heading').textContent)
+}
+
+test('searching shows only the matching vehicles', async () => {
+  api.list.mockResolvedValue([camry, mustang, rav4])
+  api.search.mockResolvedValue([camry, rav4])
+  renderDashboard()
+  await screen.findAllByRole('article')
+
+  await userEvent.type(screen.getByLabelText(/make/i), 'Toyota')
+  await userEvent.click(screen.getByRole('button', { name: /search/i }))
+
+  expect(api.search).toHaveBeenCalledWith({ make: 'Toyota' })
+  await waitFor(() => expect(cardTitles()).toEqual(['Toyota Camry', 'Toyota RAV4']))
+  expect(screen.getByText(/2 results/i)).toBeInTheDocument()
+})
+
+test('offers every category from the inventory in the filter', async () => {
+  api.list.mockResolvedValue([camry, mustang, rav4])
+  renderDashboard()
+  await screen.findAllByRole('article')
+
+  const options = within(screen.getByLabelText(/category/i)).getAllByRole('option')
+  expect(options.map((o) => o.textContent)).toEqual(['All categories', 'Coupe', 'SUV', 'Sedan'])
+})
+
+test('says so when nothing matches the search', async () => {
+  api.list.mockResolvedValue([camry])
+  api.search.mockResolvedValue([])
+  renderDashboard()
+  await screen.findByRole('article')
+
+  await userEvent.type(screen.getByLabelText(/make/i), 'Ferrari')
+  await userEvent.click(screen.getByRole('button', { name: /search/i }))
+
+  expect(await screen.findByText(/no vehicles match your search/i)).toBeInTheDocument()
+})
+
+test('clearing the search shows the full inventory again', async () => {
+  api.list.mockResolvedValue([camry, mustang])
+  api.search.mockResolvedValue([camry])
+  renderDashboard()
+  await screen.findAllByRole('article')
+  await userEvent.type(screen.getByLabelText(/make/i), 'Toyota')
+  await userEvent.click(screen.getByRole('button', { name: /search/i }))
+  await waitFor(() => expect(screen.getAllByRole('article')).toHaveLength(1))
+
+  await userEvent.click(screen.getByRole('button', { name: /clear/i }))
+
+  await waitFor(() => expect(screen.getAllByRole('article')).toHaveLength(2))
+})
+
+test('shows an error when the search fails', async () => {
+  api.list.mockResolvedValue([camry])
+  api.search.mockRejectedValue(new ApiError(422, 'min_price: Input should be greater than or equal to 0'))
+  renderDashboard()
+  await screen.findByRole('article')
+
+  await userEvent.click(screen.getByRole('button', { name: /search/i }))
+
+  expect(await screen.findByRole('alert')).toHaveTextContent('min_price')
 })
