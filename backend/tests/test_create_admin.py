@@ -60,3 +60,17 @@ def test_rejects_invalid_input_without_creating_anyone(db_session, args, capsys)
     assert exit_code == 1
     assert "Invalid" in capsys.readouterr().err
     assert db_session.scalars(select(User)).all() == []
+
+
+def test_admin_script_skips_the_email_domain_check(db_session, monkeypatch):
+    # The operator running the script is trusted; e.g. admin@example.com for a local demo.
+    from app.core import email_domain
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "check_email_domain", True)
+    monkeypatch.setattr(email_domain, "domain_accepts_mail", lambda email: False)
+
+    exit_code = run(db_session, "--email", "admin@example.com", "--password", "supersecret")
+
+    assert exit_code == 0
+    assert find_user(db_session, "admin@example.com").is_admin is True
