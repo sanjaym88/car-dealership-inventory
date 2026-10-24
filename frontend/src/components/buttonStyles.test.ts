@@ -16,8 +16,8 @@ test('variants look different from each other', () => {
 })
 
 test('sizes set the height, and block stretches to full width', () => {
-  expect(buttonClass({ size: 'lg' })).toContain('h-14')
-  expect(buttonClass({ size: 'md' })).toContain('h-11')
+  expect(buttonClass({ size: 'lg' })).toContain('h-12')
+  expect(buttonClass({ size: 'md' })).toContain('h-10')
   expect(buttonClass({ size: 'sm' })).toContain('h-9')
   expect(buttonClass({ block: true }).split(' ')).toContain('w-full')
   expect(buttonClass().split(' ')).not.toContain('w-full')

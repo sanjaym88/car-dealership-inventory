@@ -36,14 +36,15 @@ manage the inventory and see every sale.
 ## Features
 
 **Look and feel**
-- Landing page: night-driving clips crossfade behind the headline, with a slow zoom.
-- *Log in* and *Sign up* slide the clips aside and roll a garage door up to reveal the form.
-- Calm, pill-shaped buttons with a slow, even ease, inspired by rivian.com, used consistently across the app.
-- A quiet near-black night with stars and a drifting skyline sits behind every app page.
+- Dark dashboard in the style of [Watermelon UI](https://ui.watermelon.sh/): near-black base, charcoal panels with
+  hairline borders, a lime accent, Inter type and Lucide icons.
+- App pages use a sidebar (Shop and Admin sections), a breadcrumb top bar, a collapsible filter panel, quick
+  category tabs above the car grid, and icon stat cards on the Sales page.
+- Landing page: night-driving clips play in turn behind the headline; *Log in* and *Sign up* slide them aside and
+  roll a garage door up to reveal the form.
 - Dialogs (checkout, admin forms) open where you are on the page, and the page behind stays still.
+- No emojis anywhere: `frontend/styleGuard.test.ts` fails the build if one appears.
 - Motion is turned off for anyone whose system asks for reduced motion.
-- Deliberately plain: no gradient text, purple gradients, glassmorphism, emojis, icon packs or fade-in
-  sections. `frontend/styleGuard.test.ts` scans the source and fails the build if any of them creep back.
 
 **Everyone (logged in)**
 - Register and log in; the session survives a page refresh and expired tokens are discarded cleanly.
@@ -90,7 +91,7 @@ manage the inventory and see every sale.
 |---|---|
 | Backend | Python 3.12, FastAPI, SQLAlchemy 2, Alembic, Pydantic, PyJWT, bcrypt |
 | Database | PostgreSQL 16 (Docker) |
-| Frontend | React 19, TypeScript, Vite, Tailwind CSS 4, React Router |
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS 4, React Router, Lucide icons, Inter |
 | Testing | Pytest, pytest-cov, HTTPX/TestClient; Vitest, Testing Library, @vitest/coverage-v8 |
 | Quality | Ruff (lint + format) for Python, oxlint for TypeScript |
 | CI | GitHub Actions (backend lint, format check and tests against Postgres; frontend lint, tests and build) |

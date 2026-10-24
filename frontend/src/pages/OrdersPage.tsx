@@ -13,21 +13,21 @@ function OrderCard({ order }: { order: Order }) {
   const name = `${order.make} ${order.model}`
   return (
     <article aria-label={name}
-      className="flex flex-col gap-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 sm:flex-row">
+      className="flex flex-col gap-6 rounded-2xl border border-line bg-panel p-6 sm:flex-row">
       <VehiclePhoto src={order.image_url} name={name} className="aspect-[16/10] rounded-xl sm:w-56 sm:shrink-0" />
       <div className="grow">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h3 className="text-lg font-semibold text-slate-900">{name}</h3>
-          <p className="text-sm text-slate-500">Order #{order.id} · {formatDate(order.created_at)}</p>
+          <h3 className="text-lg font-semibold text-white">{name}</h3>
+          <p className="text-sm text-muted">Order #{order.id} · {formatDate(order.created_at)}</p>
         </div>
-        <ul className="mt-2 divide-y divide-slate-100 text-sm">
+        <ul className="mt-2 divide-y divide-line text-sm">
           {order.line_items.map((item) => (
             <li key={item.label} className="flex justify-between py-1">
-              <span className="text-slate-600">{item.label}</span>
-              <span className="text-slate-900">{formatPrice(item.price)}</span>
+              <span className="text-neutral-300">{item.label}</span>
+              <span className="text-white">{formatPrice(item.price)}</span>
             </li>
           ))}
-          <li className="flex justify-between py-1.5 font-semibold text-slate-900">
+          <li className="flex justify-between py-1.5 font-semibold text-white">
             <span>Total</span>
             <span>{formatPrice(order.total_price)}</span>
           </li>

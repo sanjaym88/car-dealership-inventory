@@ -7,7 +7,7 @@ export function VehiclePhoto({ src, name, className = '' }: {
   className?: string
 }) {
   const [failed, setFailed] = useState(false)
-  const frame = `overflow-hidden bg-slate-100 ${className}`
+  const frame = `overflow-hidden bg-panel-2 ${className}`
 
   if (!src || failed) {
     return (

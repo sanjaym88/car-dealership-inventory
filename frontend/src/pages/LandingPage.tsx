@@ -83,7 +83,7 @@ export function LandingPage({ panel }: { panel?: Panel }) {
 
         {open && (
           <section aria-label={panel === 'login' ? 'Log in' : 'Sign up'}
-            className="relative flex flex-1 items-center justify-center bg-neutral-50 text-neutral-950 lg:min-h-screen">
+            className="relative flex flex-1 items-center justify-center bg-base text-white lg:min-h-screen">
             {/* key: switching forms closes the door and rolls it up again */}
             <div key={panel} className="relative w-full max-w-md overflow-hidden px-6 py-12 sm:px-10">
               <GarageDoor />

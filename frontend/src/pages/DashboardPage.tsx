@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
-import type { Vehicle } from '../api/types'
+import { Plus } from 'lucide-react'
+import type { Vehicle, VehicleSearchParams } from '../api/types'
 import { useAuth } from '../auth/useAuth'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { PageShell } from '../components/PageShell'
@@ -32,47 +33,81 @@ export function DashboardPage() {
     ? `${inv.inventory.length} models · ${inv.unitsInStock} units in stock`
     : undefined
   const addButton = user?.is_admin && (
-    <button type="button" onClick={() => setDialog({ kind: 'add' })}
-      className={buttonClass({ variant: 'light' })}>
-      + Add vehicle
+    <button type="button" onClick={() => setDialog({ kind: 'add' })} className={buttonClass({ variant: 'solid' })}>
+      <Plus aria-hidden="true" className="h-4 w-4" />
+      Add vehicle
     </button>
   )
 
+  // Quick category tabs above the grid; the filter panel can also set the category.
+  const [tab, setTab] = useState('All')
+  function selectTab(category: string) {
+    setTab(category)
+    if (category === 'All') inv.clearSearch()
+    else inv.search({ category })
+  }
+  function searchFromFilters(params: VehicleSearchParams) {
+    setTab(params.category ?? 'All')
+    inv.search(params)
+  }
+  function showAll() {
+    setTab('All')
+    inv.clearSearch()
+  }
+
   return (
     <PageShell title="Inventory" subtitle={summary} actions={addButton}>
-      <SearchBar categories={inv.categories} onSearch={inv.search} onClear={inv.clearSearch} />
-
-      <ErrorMessage message={inv.error} />
-      {inv.notice && (
-        <p role="status" className="mb-4 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-800 ring-1 ring-emerald-200">
-          {inv.notice}
-        </p>
-      )}
-
-      {inv.results === null && inv.error === null && (
-        <p role="status" className="py-16 text-center text-neutral-200">Loading vehicles…</p>
-      )}
-
-      {inv.searching && inv.results && (
-        <p className="mb-4 text-sm text-neutral-200">
-          {inv.results.length} {inv.results.length === 1 ? 'result' : 'results'}
-        </p>
-      )}
-
-      {inv.results?.length === 0 && (
-        <p className="rounded-2xl border border-neutral-800 bg-neutral-900 py-16 text-center text-neutral-200">
-          {inv.searching ? 'No vehicles match your search.' : 'No vehicles yet. Check back soon!'}
-        </p>
-      )}
-
-      {inv.results && inv.results.length > 0 && (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {inv.results.map((vehicle) => (
-            <VehicleCard key={vehicle.id} vehicle={vehicle} onPurchase={setBuying}
-              purchasing={inv.purchasingId === vehicle.id} admin={adminActions} />
-          ))}
+      <div className="grid gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
+        <div className="lg:sticky lg:top-20 lg:self-start">
+          <SearchBar categories={inv.categories} onSearch={searchFromFilters} onClear={showAll} />
         </div>
-      )}
+
+        <div className="min-w-0 space-y-5">
+          <div role="tablist" aria-label="Categories"
+            className="flex gap-1 overflow-x-auto rounded-xl border border-line bg-panel p-1 [scrollbar-width:none]">
+            {['All', ...inv.categories].map((category) => (
+              <button key={category} type="button" role="tab" aria-selected={tab === category}
+                onClick={() => selectTab(category)}
+                className={`whitespace-nowrap rounded-lg px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                  tab === category ? 'bg-accent text-black' : 'text-muted hover:bg-panel-2 hover:text-white'}`}>
+                {category}
+              </button>
+            ))}
+          </div>
+
+          <ErrorMessage message={inv.error} />
+          {inv.notice && (
+            <p role="status" className="rounded-lg bg-accent/10 px-3 py-2 text-sm text-accent ring-1 ring-inset ring-accent/30">
+              {inv.notice}
+            </p>
+          )}
+
+          {inv.results === null && inv.error === null && (
+            <p role="status" className="py-16 text-center text-muted">Loading vehicles…</p>
+          )}
+
+          {inv.searching && inv.results && (
+            <p className="text-sm text-muted">
+              {inv.results.length} {inv.results.length === 1 ? 'result' : 'results'}
+            </p>
+          )}
+
+          {inv.results?.length === 0 && (
+            <p className="rounded-2xl border border-dashed border-line py-16 text-center text-muted">
+              {inv.searching ? 'No vehicles match your search.' : 'No vehicles yet. Check back soon!'}
+            </p>
+          )}
+
+          {inv.results && inv.results.length > 0 && (
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {inv.results.map((vehicle) => (
+                <VehicleCard key={vehicle.id} vehicle={vehicle} onPurchase={setBuying}
+                  purchasing={inv.purchasingId === vehicle.id} admin={adminActions} />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
       <AdminDialogs dialog={dialog} onClose={closeDialog} actions={inv} />
       {buying && (

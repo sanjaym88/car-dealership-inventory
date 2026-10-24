@@ -32,7 +32,7 @@ function estimateTotal(base: number, options: CheckoutOptions, s: CheckoutSelect
 function Group({ legend, children }: { legend: string; children: ReactNode }) {
   return (
     <fieldset>
-      <legend className="mb-2 text-sm font-semibold text-slate-900">{legend}</legend>
+      <legend className="mb-2 text-sm font-semibold text-white">{legend}</legend>
       <div className="grid gap-2 sm:grid-cols-2">{children}</div>
     </fieldset>
   )
@@ -47,13 +47,13 @@ function Choice({ type, name, option, checked, onChange }: {
 }) {
   return (
     <label className={`flex cursor-pointer items-start gap-2 rounded-lg p-3 text-sm ring-1 transition ${
-      checked ? 'bg-indigo-50 ring-indigo-500' : 'ring-slate-200 hover:bg-slate-50'}`}>
-      <input type={type} name={name} checked={checked} onChange={onChange} className="mt-0.5 accent-indigo-600" />
+      checked ? 'bg-accent/10 ring-accent' : 'ring-line hover:bg-panel-2'}`}>
+      <input type={type} name={name} checked={checked} onChange={onChange} className="mt-0.5 accent-lime-400" />
       <span className="grow">
-        <span className="block font-medium text-slate-900">{option.label}</span>
-        {option.description && <span className="block text-xs text-slate-500">{option.description}</span>}
+        <span className="block font-medium text-white">{option.label}</span>
+        {option.description && <span className="block text-xs text-muted">{option.description}</span>}
       </span>
-      <span className="shrink-0 text-xs font-medium text-slate-600">{priceTag(option.price)}</span>
+      <span className="shrink-0 text-xs font-medium text-neutral-300">{priceTag(option.price)}</span>
     </label>
   )
 }
@@ -61,14 +61,14 @@ function Choice({ type, name, option, checked, onChange }: {
 function Receipt({ order, onClose }: { order: Order; onClose: () => void }) {
   return (
     <section aria-label={`Order #${order.id} confirmed`} className="space-y-4">
-      <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800 ring-1 ring-emerald-200">
+      <p className="rounded-lg bg-accent/10 px-3 py-2 text-sm font-medium text-accent ring-1 ring-inset ring-accent/30">
         Order #{order.id} confirmed: your {order.make} {order.model} is on its way.
       </p>
-      <ul className="divide-y divide-slate-100 text-sm">
+      <ul className="divide-y divide-line text-sm">
         {order.line_items.map((item) => (
           <li key={item.label} className="flex justify-between py-1.5">
-            <span className="text-slate-600">{item.label}</span>
-            <span className="text-slate-900">{formatPrice(item.price)}</span>
+            <span className="text-neutral-300">{item.label}</span>
+            <span className="text-white">{formatPrice(item.price)}</span>
           </li>
         ))}
         <li className="flex justify-between py-2 font-semibold">
@@ -93,7 +93,7 @@ export function CheckoutForm({ vehicle, options, onConfirm, onClose }: {
   onClose: () => void
 }) {
   if (options === null) {
-    return <p role="status" className="py-8 text-center text-slate-500">Loading options…</p>
+    return <p role="status" className="py-8 text-center text-muted">Loading options…</p>
   }
   return <CheckoutChoices vehicle={vehicle} options={options} onConfirm={onConfirm} onClose={onClose} />
 }
@@ -131,8 +131,8 @@ function CheckoutChoices({ vehicle, options, onConfirm, onClose }: {
         <VehiclePhoto src={vehicle.image_url} name={`${vehicle.make} ${vehicle.model}`}
           className="h-20 w-32 shrink-0 rounded-lg" />
         <div>
-          <p className="font-semibold text-slate-900">{vehicle.make} {vehicle.model}</p>
-          <p className="text-sm text-slate-500">{vehicle.category} · base price {formatPrice(vehicle.price)}</p>
+          <p className="font-semibold text-white">{vehicle.make} {vehicle.model}</p>
+          <p className="text-sm text-muted">{vehicle.category} · base price {formatPrice(vehicle.price)}</p>
         </div>
       </div>
 
@@ -163,9 +163,9 @@ function CheckoutChoices({ vehicle, options, onConfirm, onClose }: {
 
       <ErrorMessage message={error} />
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4">
-        <p className="text-sm text-slate-500">
-          Total <span data-testid="checkout-total" className="ml-1 text-xl font-bold text-slate-900">{formatPrice(total)}</span>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+        <p className="text-sm text-muted">
+          Total <span data-testid="checkout-total" className="ml-1 text-xl font-bold text-white">{formatPrice(total)}</span>
         </p>
         <div className="flex gap-2">
           <button type="button" onClick={onClose}

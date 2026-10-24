@@ -17,8 +17,8 @@ export function ConfirmDelete({ name, onConfirm, onCancel }: {
 
   return (
     <form onSubmit={handleSubmit}>
-      <p className="text-sm text-slate-600">
-        This permanently removes <strong className="text-slate-900">{name}</strong> from the inventory.
+      <p className="text-sm text-neutral-300">
+        This permanently removes <strong className="text-white">{name}</strong> from the inventory.
       </p>
       <div className="mt-4"><ErrorMessage message={error} /></div>
       <FormActions pending={pending} label="Delete" pendingLabel="Deleting…" onCancel={onCancel} tone="danger" />

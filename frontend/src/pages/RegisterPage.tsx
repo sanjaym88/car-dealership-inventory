@@ -45,8 +45,8 @@ export function RegisterPage() {
 
   return (
     <>
-      <h2 className="text-2xl font-bold tracking-tight text-slate-900">Create your account</h2>
-      <p className="mt-1 mb-6 text-sm text-slate-500">Browse and buy from our inventory.</p>
+      <h2 className="text-2xl font-bold tracking-tight text-white">Create your account</h2>
+      <p className="mt-1 mb-6 text-sm text-muted">Browse and buy from our inventory.</p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <FormField label="Email" type="email" autoComplete="email" required
           value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -57,9 +57,9 @@ export function RegisterPage() {
         <ErrorMessage message={error} />
         <SubmitButton pending={submitting} label="Create account" pendingLabel="Creating account…" />
       </form>
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm text-muted">
         Already have an account?{' '}
-        <Link to="/login" state={location.state} className="font-medium text-rose-600 transition hover:text-rose-500 hover:underline">
+        <Link to="/login" state={location.state} className="font-medium text-accent transition-colors hover:text-accent-strong hover:underline">
           Log in
         </Link>
       </p>

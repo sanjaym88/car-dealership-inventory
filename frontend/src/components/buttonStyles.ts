@@ -1,32 +1,32 @@
-// One button language for the whole app, inspired by rivian.com: calm, solid pills with
-// medium-weight type and a slow, symmetric ease on colour changes. Works on <button> and <Link>.
+// One button language for the whole app, in the style of Watermelon UI: compact rounded buttons
+// on dark surfaces, with the lime accent for the primary action. Works on <button> and <Link>.
 
 export type ButtonVariant = 'solid' | 'light' | 'outline' | 'ghost' | 'success' | 'danger'
 export type ButtonSize = 'lg' | 'md' | 'sm'
 
 const BASE =
-  'inline-flex items-center justify-center gap-2 rounded-full font-medium tracking-[-0.01em] whitespace-nowrap ' +
+  'inline-flex items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap ' +
   'transition-[background-color,color,box-shadow,transform] duration-300 ease-glide ' +
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-rose-400 ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-base focus-visible:ring-accent ' +
   'active:scale-[0.98] disabled:cursor-not-allowed disabled:active:scale-100'
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  // dark pill: the primary action on light surfaces
-  solid: 'bg-neutral-950 text-white hover:bg-neutral-800 disabled:bg-neutral-300 disabled:text-neutral-500',
-  // light pill: the primary action on dark surfaces
-  light: 'bg-white text-neutral-950 hover:bg-neutral-200 disabled:bg-neutral-500',
-  // quiet secondary action on dark surfaces
-  outline: 'bg-neutral-950 text-white ring-1 ring-inset ring-neutral-500 hover:bg-white hover:text-neutral-950 hover:ring-white',
-  // text-like action on light surfaces
-  ghost: 'text-neutral-700 hover:bg-neutral-100',
-  success: 'bg-emerald-600 text-white hover:bg-emerald-500 disabled:bg-neutral-200 disabled:text-neutral-500',
-  danger: 'bg-rose-600 text-white hover:bg-rose-500 disabled:bg-rose-300',
+  // lime pill: the primary action
+  solid: 'bg-accent text-black hover:bg-accent-strong disabled:bg-panel-2 disabled:text-muted',
+  // white pill: the primary action over photos or video
+  light: 'bg-white text-black hover:bg-neutral-200 disabled:bg-neutral-500',
+  // quiet secondary action
+  outline: 'bg-panel text-white ring-1 ring-inset ring-line hover:bg-panel-2',
+  // text-like action
+  ghost: 'text-muted hover:bg-panel-2 hover:text-white',
+  success: 'bg-emerald-500 text-black hover:bg-emerald-400 disabled:bg-panel-2 disabled:text-muted',
+  danger: 'bg-rose-600 text-white hover:bg-rose-500 disabled:bg-rose-900',
 }
 
 const SIZES: Record<ButtonSize, string> = {
-  lg: 'h-14 px-7 text-[15px]',
-  md: 'h-11 px-5 text-sm',
-  sm: 'h-9 px-4 text-sm',
+  lg: 'h-12 px-6 text-[15px]',
+  md: 'h-10 px-4 text-sm',
+  sm: 'h-9 px-3.5 text-sm',
 }
 
 export function buttonClass({ variant = 'solid', size = 'md', block = false }: {

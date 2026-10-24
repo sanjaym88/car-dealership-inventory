@@ -36,8 +36,8 @@ export function LoginPage() {
 
   return (
     <>
-      <h2 className="text-2xl font-bold tracking-tight text-slate-900">Welcome back</h2>
-      <p className="mt-1 mb-6 text-sm text-slate-500">Log in to browse and buy.</p>
+      <h2 className="text-2xl font-bold tracking-tight text-white">Welcome back</h2>
+      <p className="mt-1 mb-6 text-sm text-muted">Log in to browse and buy.</p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <FormField label="Email" type="email" autoComplete="email" required
           value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -46,9 +46,9 @@ export function LoginPage() {
         <ErrorMessage message={error} />
         <SubmitButton pending={submitting} label="Log in" pendingLabel="Logging in…" />
       </form>
-      <p className="mt-6 text-center text-sm text-slate-500">
+      <p className="mt-6 text-center text-sm text-muted">
         New here?{' '}
-        <Link to="/register" state={location.state} className="font-medium text-rose-600 transition hover:text-rose-500 hover:underline">
+        <Link to="/register" state={location.state} className="font-medium text-accent transition-colors hover:text-accent-strong hover:underline">
           Create an account
         </Link>
       </p>

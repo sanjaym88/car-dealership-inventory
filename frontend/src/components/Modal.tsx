@@ -35,8 +35,8 @@ export function Modal({ title, onClose, children }: {
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/75 p-4 sm:items-center"
       onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <div role="dialog" aria-modal="true" aria-labelledby={titleId}
-        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
-        <h2 id={titleId} className="mb-4 text-lg font-semibold text-slate-900">{title}</h2>
+        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-line bg-panel p-6 shadow-2xl">
+        <h2 id={titleId} className="mb-4 text-lg font-semibold text-white">{title}</h2>
         {children}
       </div>
     </div>,

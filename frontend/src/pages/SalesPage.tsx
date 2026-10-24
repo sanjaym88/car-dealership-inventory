@@ -1,4 +1,6 @@
 // Admin view of every order: who bought what, when, and for how much.
+import { DollarSign, Receipt, TrendingUp } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { ordersApi } from '../api/orders'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { formatDate } from '../components/formatDate'
@@ -6,11 +8,16 @@ import { formatPrice } from '../components/formatPrice'
 import { PageShell } from '../components/PageShell'
 import { useOrders } from './useOrders'
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({ label, value, icon: Icon }: { label: string; value: string; icon: LucideIcon }) {
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</p>
-      <p className="mt-1 text-2xl font-bold text-slate-900">{value}</p>
+    <div className="rounded-2xl border border-line bg-panel p-5">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted">{label}</p>
+        <span className="grid h-8 w-8 place-items-center rounded-lg bg-panel-2 text-accent">
+          <Icon aria-hidden="true" className="h-4 w-4" />
+        </span>
+      </div>
+      <p className="mt-3 text-2xl font-bold tracking-tight text-white">{value}</p>
     </div>
   )
 }
@@ -31,13 +38,14 @@ export function SalesPage() {
       )}
       {orders && orders.length > 0 && (
         <>
-          <div className="mb-6 grid gap-6 sm:grid-cols-2">
-            <Stat label="Orders" value={`${orders.length} ${orders.length === 1 ? 'order' : 'orders'}`} />
-            <Stat label="Revenue" value={formatPrice(total)} />
+          <div className="mb-6 grid gap-5 sm:grid-cols-3">
+            <Stat label="Orders" icon={Receipt} value={`${orders.length} ${orders.length === 1 ? 'order' : 'orders'}`} />
+            <Stat label="Revenue" icon={DollarSign} value={formatPrice(total)} />
+            <Stat label="Average order" icon={TrendingUp} value={formatPrice(Math.round(total / orders.length))} />
           </div>
-          <div className="overflow-x-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+          <div className="overflow-x-auto rounded-2xl border border-line bg-panel">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+              <thead className="border-b border-line bg-panel-2 text-xs uppercase tracking-wide text-muted">
                 <tr>
                   <th className="px-4 py-3">Order</th>
                   <th className="px-4 py-3">Date</th>
@@ -46,14 +54,14 @@ export function SalesPage() {
                   <th className="px-4 py-3 text-right">Total</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-line">
                 {orders.map((order) => (
                   <tr key={order.id}>
-                    <td className="px-4 py-3 font-medium text-slate-900">#{order.id}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(order.created_at)}</td>
-                    <td className="px-4 py-3 text-slate-600">{order.buyer_email}</td>
-                    <td className="px-4 py-3 text-slate-900">{order.make} {order.model}</td>
-                    <td className="px-4 py-3 text-right font-medium text-slate-900">{formatPrice(order.total_price)}</td>
+                    <td className="px-4 py-3 font-medium text-white">#{order.id}</td>
+                    <td className="px-4 py-3 text-neutral-300">{formatDate(order.created_at)}</td>
+                    <td className="px-4 py-3 text-neutral-300">{order.buyer_email}</td>
+                    <td className="px-4 py-3 text-white">{order.make} {order.model}</td>
+                    <td className="px-4 py-3 text-right font-medium text-white">{formatPrice(order.total_price)}</td>
                   </tr>
                 ))}
               </tbody>
