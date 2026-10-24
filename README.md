@@ -39,9 +39,11 @@ manage the inventory and see every sale.
 - Landing page: night-driving clips crossfade behind the headline, with a slow zoom.
 - *Log in* and *Sign up* slide the clips aside and roll a garage door up to reveal the form.
 - Calm, pill-shaped buttons with a slow, even ease, inspired by rivian.com, used consistently across the app.
-- A night sky with a drifting skyline sits behind every app page, with smooth card and page transitions.
+- A quiet near-black night with stars and a drifting skyline sits behind every app page.
 - Dialogs (checkout, admin forms) open where you are on the page, and the page behind stays still.
 - Motion is turned off for anyone whose system asks for reduced motion.
+- Deliberately plain: no gradient text, purple gradients, glassmorphism, emojis, icon packs or fade-in
+  sections. `frontend/styleGuard.test.ts` scans the source and fails the build if any of them creep back.
 
 **Everyone (logged in)**
 - Register and log in; the session survives a page refresh and expired tokens are discarded cleanly.
