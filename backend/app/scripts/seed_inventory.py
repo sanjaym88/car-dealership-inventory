@@ -24,7 +24,8 @@ from app.models.vehicle import Vehicle
 # Wikimedia's API policy requires a descriptive User-Agent with contact details.
 USER_AGENT = "car-dealership-kata/1.0 (https://github.com/sanjaym88/car-dealership-inventory)"
 SUMMARY_URL = "https://en.wikipedia.org/api/rest_v1/page/summary/{title}"
-PHOTO_WIDTH = 640
+# Must be one of Wikimedia's standard thumbnail widths (250, 330, 500, 960, 1280); others return 400.
+PHOTO_WIDTH = 500
 
 PhotoLookup = Callable[[str], str | None]
 

@@ -91,7 +91,8 @@ def wikipedia(handler) -> httpx.Client:
     return httpx.Client(transport=httpx.MockTransport(handler))
 
 
-def test_photo_lookup_returns_a_640px_wikimedia_url_without_tracking_params():
+def test_photo_lookup_returns_a_500px_wikimedia_url_without_tracking_params():
+    # Wikimedia only serves standard thumbnail widths (250, 330, 500, 960, 1280...); 640 returns 400.
     thumb = ("https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Camry.jpg/"
              "330px-Camry.jpg?utm_source=en.wikipedia.org")
 
@@ -103,7 +104,7 @@ def test_photo_lookup_returns_a_640px_wikimedia_url_without_tracking_params():
 
     url = fetch_wikipedia_photo("Toyota_Camry", client=wikipedia(handler))
 
-    assert url == "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Camry.jpg/640px-Camry.jpg"
+    assert url == "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Camry.jpg/500px-Camry.jpg"
 
 
 def test_photo_lookup_returns_none_for_missing_pages_or_images():
