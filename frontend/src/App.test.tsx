@@ -11,9 +11,18 @@ function renderAt(path: string) {
   )
 }
 
-test('logged-out visitors to the dashboard land on the login page', () => {
+const tagline = /your next dream car/i
+
+test('logged-out visitors to the dashboard land on the welcome page', () => {
   renderAt('/')
 
+  expect(screen.getByText(tagline)).toBeInTheDocument()
+})
+
+test('the login page opens the login form over the welcome scene', () => {
+  renderAt('/login')
+
+  expect(screen.getByText(tagline)).toBeInTheDocument()
   expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument()
 })
 
@@ -23,14 +32,14 @@ test('the register page is reachable', () => {
   expect(screen.getByRole('heading', { name: /create your account/i })).toBeInTheDocument()
 })
 
-test('unknown paths fall back to the dashboard (and so to login)', () => {
+test('unknown paths fall back to the dashboard (and so to the welcome page)', () => {
   renderAt('/no-such-page')
 
-  expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument()
+  expect(screen.getByText(tagline)).toBeInTheDocument()
 })
 
 test('my orders needs a login', () => {
   renderAt('/orders')
 
-  expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument()
+  expect(screen.getByText(tagline)).toBeInTheDocument()
 })

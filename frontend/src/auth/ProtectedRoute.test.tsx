@@ -15,7 +15,7 @@ function renderAt(path: string) {
   render(
     <MemoryRouter initialEntries={[path]}>
       <Routes>
-        <Route path="/login" element={<p>Login page</p>} />
+        <Route path="/welcome" element={<p>Welcome page</p>} />
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<p>Dashboard</p>} />
         </Route>
@@ -24,12 +24,12 @@ function renderAt(path: string) {
   )
 }
 
-test('redirects anonymous visitors to /login', () => {
+test('redirects anonymous visitors to the welcome page', () => {
   mockedUseAuth.mockReturnValue(authState(null))
 
   renderAt('/')
 
-  expect(screen.getByText('Login page')).toBeInTheDocument()
+  expect(screen.getByText('Welcome page')).toBeInTheDocument()
 })
 
 test('shows the page to logged-in users', () => {
@@ -45,6 +45,6 @@ test('waits while the session is being restored instead of redirecting', () => {
 
   renderAt('/')
 
-  expect(screen.queryByText('Login page')).not.toBeInTheDocument()
+  expect(screen.queryByText('Welcome page')).not.toBeInTheDocument()
   expect(screen.getByRole('status')).toBeInTheDocument()
 })
