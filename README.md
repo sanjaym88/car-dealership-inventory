@@ -221,15 +221,17 @@ Commits made with AI assistance carry a `Co-Authored-By` trailer, and their mess
 
 ## My AI Usage
 
-<!-- Write this section yourself; it should reflect your own experience. Prompts to answer: -->
+<!-- Write this section yourself; it should reflect your own experience. -->
 
 ### Tools used
-_TODO_
+_TODO: which AI tools and models you used._
 
 ### How I used them
-_TODO_
+_TODO: what you asked the AI to do (planning, scaffolding, tests, implementation, debugging, docs), and
+what you wrote, decided or changed yourself._
 
 ### Reflection
-_TODO_
+_TODO: what sped you up, what you had to verify or correct, what you learned, and what you would do
+differently._
 
 Raw chat logs are in [PROMPTS.md](PROMPTS.md).
