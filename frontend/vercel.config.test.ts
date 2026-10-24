@@ -7,7 +7,7 @@ interface Rewrite {
   destination: string
 }
 
-const config = JSON.parse(readFileSync(new URL('../vercel.json', import.meta.url), 'utf8')) as {
+const config = JSON.parse(readFileSync(new URL('./vercel.json', import.meta.url), 'utf8')) as {
   rewrites: Rewrite[]
 }
 
