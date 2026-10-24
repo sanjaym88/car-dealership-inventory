@@ -250,3 +250,22 @@ test('a failed purchase shows the reason in checkout and marks the vehicle sold 
   expect(await within(dialog).findByRole('alert')).toHaveTextContent('Vehicle is out of stock')
   expect(within(card).getByRole('button', { name: /purchase/i })).toBeDisabled()
 })
+// --- quick category tabs ---
+
+test('category tabs filter the inventory, and All shows everything again', async () => {
+  api.list.mockResolvedValue([camry, mustang, rav4])
+  api.search.mockResolvedValue([rav4])
+  renderDashboard()
+  await screen.findAllByRole('article')
+  const tabs = screen.getByRole('tablist', { name: /categories/i })
+
+  await userEvent.click(within(tabs).getByRole('tab', { name: 'SUV' }))
+
+  expect(api.search).toHaveBeenCalledWith({ category: 'SUV' })
+  expect(within(tabs).getByRole('tab', { name: 'SUV' })).toHaveAttribute('aria-selected', 'true')
+  await waitFor(() => expect(screen.getAllByRole('article')).toHaveLength(1))
+
+  await userEvent.click(within(tabs).getByRole('tab', { name: 'All' }))
+
+  await waitFor(() => expect(screen.getAllByRole('article')).toHaveLength(3))
+})

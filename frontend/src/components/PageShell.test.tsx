@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { useAuth } from '../auth/useAuth'
 import { alice, authState } from '../test/authMock'
@@ -17,19 +17,21 @@ function renderShell() {
   )
 }
 
-test('shows the title, subtitle and content under the header', () => {
+test('shows a top bar with a breadcrumb, then the title, subtitle and content', () => {
   renderShell()
 
   expect(screen.getByRole('banner')).toBeInTheDocument()
+  expect(screen.getByRole('navigation', { name: 'Breadcrumb' })).toHaveTextContent('AutoVault/Inventory')
   expect(screen.getByRole('heading', { name: 'Inventory' })).toBeInTheDocument()
   expect(screen.getByText('30 models')).toBeInTheDocument()
   expect(screen.getByText('Content')).toBeInTheDocument()
 })
 
-test('sits on the same night-sky backdrop as the landing page, hidden from screen readers', () => {
+test('has a sidebar with the shop section and its links', () => {
   renderShell()
 
-  const backdrop = screen.getByTestId('night-backdrop')
-  expect(backdrop).toHaveAttribute('aria-hidden', 'true')
-  expect(screen.getByTestId('skyline')).toBeInTheDocument()
+  const sidebar = screen.getByRole('complementary', { name: 'Sidebar' })
+  expect(within(sidebar).getByText('Shop')).toBeInTheDocument()
+  expect(within(sidebar).getByRole('link', { name: 'Inventory' })).toBeInTheDocument()
+  expect(within(sidebar).getByRole('link', { name: 'My orders' })).toBeInTheDocument()
 })

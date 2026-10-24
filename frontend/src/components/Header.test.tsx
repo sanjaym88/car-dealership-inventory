@@ -28,8 +28,9 @@ test('only admins get the Sales link', () => {
   expect(screen.queryByRole('link', { name: 'Sales' })).not.toBeInTheDocument()
 })
 
-test('admins see the Sales link', () => {
+test('admins see the Sales link in an Admin section', () => {
   renderHeader(admin)
+  expect(screen.getByText('Admin', { selector: 'p' })).toBeInTheDocument()
   expect(screen.getByRole('link', { name: 'Sales' })).toHaveAttribute('href', '/sales')
 })
 

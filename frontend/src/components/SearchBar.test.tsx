@@ -59,3 +59,14 @@ test('clear empties every field and notifies the parent', async () => {
   expect(screen.getByLabelText(/min price/i)).toHaveValue(null)
   expect(onClear).toHaveBeenCalled()
 })
+
+test('filter sections collapse and expand', async () => {
+  const { user } = renderSearchBar()
+  const price = screen.getByRole('button', { name: /price/i })
+  expect(price).toHaveAttribute('aria-expanded', 'true')
+
+  await user.click(price)
+
+  expect(price).toHaveAttribute('aria-expanded', 'false')
+  expect(screen.queryByLabelText(/min price/i)).not.toBeInTheDocument()
+})
