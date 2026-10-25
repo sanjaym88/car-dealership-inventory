@@ -8,7 +8,7 @@ manage the inventory and see every sale.
 
 - **Backend:** FastAPI REST API with JWT authentication and role-based access, backed by PostgreSQL.
 - **Frontend:** React + TypeScript single-page app styled with Tailwind CSS.
-- **Quality:** 277 automated tests (130 backend, 147 frontend) at ~99% coverage, plus linting, run on every push by GitHub Actions.
+- **Quality:** 297 automated tests (146 backend, 151 frontend) at ~99% coverage, plus linting, run on every push by GitHub Actions.
 - **Live demo:** https://car-dealership-inventory-x2si.vercel.app (the free backend sleeps when idle; the first request can take up to a minute)
 - **One command to try it:** `docker compose --profile app up --build`, then open http://localhost:8080.
 
@@ -73,7 +73,7 @@ manage the inventory and see every sale.
 
 ## Screenshots
 
-| Garage-door login with the car button | Inventory on the night theme |
+| Garage-door login | Inventory: sidebar, filters, category tabs |
 |---|---|
 | ![Login](docs/screenshots/02-login.jpg) | ![Inventory](docs/screenshots/03-inventory.jpg) |
 
@@ -249,8 +249,8 @@ All tests pass; full output is in [`docs/test-report/`](docs/test-report/).
 
 | Suite | Tests | Result | Coverage |
 |---|---|---|---|
-| Backend (pytest, real PostgreSQL) | 130 | All passed | 99% of statements |
-| Frontend (Vitest + Testing Library) | 147 | All passed | 99.0% statements · 95.6% branches |
+| Backend (pytest, real PostgreSQL) | 146 | All passed | 99% of statements |
+| Frontend (Vitest + Testing Library) | 151 | All passed | 98.8% statements · 95.1% branches |
 
 What is covered:
 - **Auth:** registration rules, bcrypt hashing, login, identical errors for unknown email and wrong password,
@@ -329,17 +329,45 @@ Commits made with AI assistance carry a `Co-Authored-By` trailer, and their mess
 
 ## My AI Usage
 
-<!-- Write this section yourself; it should reflect your own experience. -->
-
 ### Tools used
-_TODO: which AI tools and models you used._
+- **Claude Code** (Anthropic's coding agent, in the Claude desktop app), using Claude Sonnet 5.5 at the start
+  and Claude Opus 5.5 for most of the build. It worked directly in this repository: editing files, running
+  tests, git, Docker and the GitHub CLI, and checking the running app in its built-in browser.
+- No other AI tools were used.
 
 ### How I used them
-_TODO: what you asked the AI to do (planning, scaffolding, tests, implementation, debugging, docs), and
-what you wrote, decided or changed yourself._
+- **Planning.** I gave it the kata brief and asked for a modular breakdown first (backend B1–B6, frontend
+  F1–F6), and for a way to work together without it taking over. I chose the stack myself: FastAPI,
+  PostgreSQL with SQLAlchemy and Alembic, React with TypeScript and Tailwind, Pytest and Vitest, GitHub Actions.
+- **Scaffolding.** It set up the repository, the backend and frontend skeletons, Docker Compose and CI.
+- **Test-driven features.** I typed the first registration test myself with its guidance. After that I asked it
+  to drive the red, green, refactor cycle for each module, committing each step separately so the history
+  shows it, while I reviewed the results and steered the scope.
+- **Product decisions came from me.** Examples: checkout customisation (paint, package, add-ons, delivery),
+  order history, real car photos, the email-domain check, the garage-door login, Rivian-style buttons, using
+  my own night-driving GIFs, the Watermelon UI look, and removing emojis.
+- **Finding and fixing problems.** I reported issues from using the app (a fake email domain being accepted,
+  checkout dialogs opening mid-page, GIFs repeating instead of rotating, test cars in the showroom). I asked
+  for a black-box stress test, which found four real bugs: duplicate accounts by email case, 500 errors from
+  oversized numbers and ids, and no login throttling. Each fix got failing tests first.
+- **Deployment.** It wrote the Render, Vercel and Docker configuration. I created the Neon, Render and Vercel
+  accounts and secrets myself, then it verified the live services and caught that the backend URL in the
+  config pointed at someone else's app.
+- **Transparency.** Every AI-assisted commit has a `Co-Authored-By` trailer, and its message says what the AI
+  did. The raw conversation is in PROMPTS.md.
 
 ### Reflection
-_TODO: what sped you up, what you had to verify or correct, what you learned, and what you would do
-differently._
+- **Speed.** The AI made the TDD loop fast: writing a full set of edge-case tests before each feature would
+  have taken me much longer, and it kept the red, green and refactor commits disciplined.
+- **Verifying, not trusting.** Several of its first attempts were wrong and only showed up when checked:
+  Wikimedia rejected the photo size it chose, a test passed for the wrong reason, the deployed frontend
+  pointed at a stranger's backend, and the stress test left junk data behind. Asking it to prove things (run
+  the app, measure, try the naive version of the concurrency fix and watch the test catch it) mattered more
+  than its explanations.
+- **Owning the decisions.** It defaults to sensible but generic choices, so the product only became mine
+  where I pushed back on the look, the flows and the scope. Letting it write most of the code means I have
+  to read and understand it, which is what I will need to explain in the interview.
+- **Next time,** I would write more of the tests myself and use the AI more as a reviewer, and agree the
+  visual design before building, rather than restyling the frontend several times.
 
 Raw chat logs are in [PROMPTS.md](PROMPTS.md).
